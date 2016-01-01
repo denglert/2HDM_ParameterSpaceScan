@@ -1,7 +1,12 @@
 #!/bin/sh
 
-TAG="job_cba_tb_50_50"
-CONFIG="ParamSpace.config"
+#TAG="job_wide_6_by_6"
+#CONFIG="ParamSpace_Wide.config"
+#CONFIG="ParamSpace.config"
+
+#TAG="job_cba_tb_201_by_201"
+TAG="job_cba_tb_51_51"
+CONFIG="ParamSpace_cba_tb_51_51.config"
 WRITELHA=0
 
 ###############################
@@ -9,6 +14,7 @@ WRITELHA=0
 WORKDIR=/home/de3u14/lib/projects/2HDM/2HDM_ParameterSpaceScan/
 cd $WORKDIR
 source ./qsub/$CONFIG
+source ~/lib/build/hep/root/bin/thisroot.sh
 module load gsl
 
 ###############################
@@ -20,7 +26,9 @@ rm -rf output/$TAG
 mkdir output/$TAG
 mkdir output/$TAG/LHA
 
-echo "    mh           mH           cba           tb          Z4            Z5           Z7           chisq" > $file_param_chisq
+# mh mH cba tb, Z4, Z5, Z7, chisq, tot_hbobs, stability, unitarity,
+# perturbativity, mA, GammaA, Gammah 
+echo "    mh           mH           cba           tb          Z4            Z5          Z7           chisq      tot_hbobs    stb  uni  per       mA        Gamma_h     Gamma_A" > $file_param_chisq
 
 # Division by zero test
 if [ $nmhBins -eq 1 ]; then

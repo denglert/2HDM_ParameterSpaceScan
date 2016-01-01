@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
   if ( argc != 11)
   {
 	 printf("ParameterScan_Hybrid_MultiDim usage:\n");
-	 printf("ParameterScan_Hybrid_MultiDim <tag> <BitWriteLHA> <mh> <mH> <cba> <Z4> <Z5> <Z7> <tanb> <yukawa-type>");
+	 printf("ParameterScan_Hybrid_MultiDim <tag> <BitWriteLHA> <mh> <mH> <cba> <tanb> <Z4> <Z5> <Z7> <yukawa-type>");
   }
 
   std::string tag  = argv[1];
@@ -94,6 +94,11 @@ int main(int argc, char* argv[]) {
   double S,T,U,V,W,X;   
 
   constr.oblique_param(mh_ref,S,T,U,V,W,X);
+
+  bool BitAllowedStability      = constr.check_stability();
+  bool BitAllowedUnitarity      = constr.check_unitarity();
+  bool BitAllowedPerturbaticity = constr.check_perturbativity();
+
 // constr.print_all(mh_ref);
   
 //  printf("\nConstraints:\n");
@@ -142,7 +147,9 @@ int main(int argc, char* argv[]) {
   }
   printf("------------------------------------------------------------\n");
   printf("  TOT %5d %6d %16.8E %5d   %s\n", hbres[0],hbchan[0],hbobs[0],hbcomb[0],hbobs[0]<1 ? "ALLOWED" : "EXCLUDED");
-  
+
+  double tot_hbobs = hbobs[0];
+
   double csqmu;
   double csqmh;
   double csqtot;
@@ -179,9 +186,26 @@ int main(int argc, char* argv[]) {
   // table.print_decays(3);
   // table.print_decays(4);
 
+  double Hvev_2 = sm.get_v2();
+  double mA = sqrt(mH_in*mH_in*(1-cba_in*cba_in) + mh_in*mh_in*cba_in*cba_in-Z5_in*Hvev_2);
+
+  // From 2HDMC:
+  //  const char *hnames[6] = {" ","h ", "H ", "A ", "H+", "H-"};
+  double Gamma_h = table.get_gammatot_h(1);
+  double Gamma_A = table.get_gammatot_h(3);
+
+  // Debuggg 
+  // double mh,mH,mA,mHp,sba,lambda6,lambda7,tan_beta,m12_2;
+  // model.get_param_phys(mh,mH,mA,mHp,sba,lambda6,lambda7,m12_2,tan_beta);
+  // printf("mA(manual): %15.8f\n", mA_man);
+  // printf("mA(2HDMC):  %15.8f\n", mA);
+
   ///////////////////
   // Write to file //
   ///////////////////
+
+  // mh mH cba tb, Z4, Z5, Z7, chisq, tot_hbobs, stability, unitarity,
+  // perturbativity, mA, GammaA, Gammah 
 
   // Write output to LesHouches file
   if ( BitWriteLHA )
@@ -191,6 +215,8 @@ int main(int argc, char* argv[]) {
   model.write_LesHouches(filename_LHA.c_str(), 1, 0, 1, 1);
   }
 
+
+
   ///////////////////////////////
   // Write parameters and chi2 //
   ///////////////////////////////
@@ -199,7 +225,7 @@ int main(int argc, char* argv[]) {
 
   std::ofstream file_param_chisq;
   file_param_chisq.open(filename_param_chisq.c_str(), std::ios_base::app);
-  std::string line = Form("%12.6f %12.6f %12.6f %12.6f %12.6f %12.6f %12.6f %12.6f\n", mh_in, mH_in, cba_in, tanb_in, Z4_in, Z5_in, Z7_in, csqtot);
+  std::string line = Form("%12.6f %12.6f %12.6f %12.6f %12.6f %12.6f %12.6f %12.6f %12.6e %4d %4d %4d    %12.6f %12.6e %12.6e \n", mh_in, mH_in, cba_in, tanb_in, Z4_in, Z5_in, Z7_in, csqtot, tot_hbobs, BitAllowedStability, BitAllowedUnitarity, BitAllowedPerturbaticity, mA, Gamma_h, Gamma_A );
   file_param_chisq << line.c_str();
 
   HB_finish();
