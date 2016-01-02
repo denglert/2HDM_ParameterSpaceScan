@@ -1,4 +1,7 @@
 #!/bin/awk -f
-BEGIN{min=9999.0;}
-{if ((NF >= 8) && ($8 < min)) {min = $8; line = $0};}
-END{print line}
+BEGIN{ min=9999.0; }
+{ 
+	if ( ($0 != "") && ($field < min) )
+	{min = $field; line = $0};
+}
+END{ print line }

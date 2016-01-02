@@ -4,8 +4,8 @@ echo -e "format_data.sh running"
 
 INPUT=chisquare_table.dat
 OUTPUT_BASE=${form_dat_out_tag}
-OUTPUT_CHI=${form_dat_out_tag}_chisq.dat
-OUTPUT_CHIDIFF=${form_dat_out_tag}_chisqdiff.dat
+OUTPUT_DAT=${form_dat_out_tag}_formated.dat
+OUTPUT_ALLOWED_DAT=${form_dat_out_tag}_formated_allowed.dat
 OUTPUT_MIN=${form_dat_out_tag}_chisqmin.dat
 OUTPUT_GNUPLOT=${form_dat_out_tag}_gnu.conf
 
@@ -27,34 +27,45 @@ awk \
 	 'NR>1 && ($form_dat_filterfield1 == form_dat_filterval1) && ($form_dat_filterfield2 == form_dat_filterval2) && ($form_dat_filterfield3 = form_dat_filterval3) && ($form_dat_filterfield4 == form_dat_filterval4) && ($form_dat_filterfield5 == form_dat_filterval5)' \
 	${INPUT} | sort -gk${form_dat_XVar} -gk${form_dat_YVar} > out_filtered.tmp
 
-# insert blank lines
+# Find minimum
 # output: OUTPUT_MIN
 
-../../awk/findmin.awk out_filtered.tmp > $OUTPUT_MIN
+../../awk/findmin.awk -v field="8" out_filtered.tmp > $OUTPUT_MIN
 min=$(awk '{print $8}' $OUTPUT_MIN)
 
 echo -e "Minimum chisq value: $min"
 
 # strip unnecessary coloumns
 # output: out_filtered_stripped
+#../../awk/stripfield.awk -v field_X="$form_dat_XVar" -v field_Y="$form_dat_YVar" -v field_Z="8" out_filtered.tmp > out_filtered_stripped.tmp
+#awk -v min=$min '{ if ($0!="") {print $1, $2, ($3-min)} else {print }; }' $OUTPUT_CHI > $OUTPUT_CHIDIFF
 
-../../awk/stripfield.awk -v field_X="$form_dat_XVar" -v field_Y="$form_dat_YVar" -v field_Z="8" out_filtered.tmp > out_filtered_stripped.tmp
+# Append subtracted coloumn
+# output: OUTPUT_CHIDIFF
 
+../../awk/append_diff.awk -v field="8" -v val="$min" out_filtered.tmp > out_filtered_appended.tmp
 
 # insert blank lines
 # output: OUTPUT_CHI
 
-../../awk/insertblanklines.awk out_filtered_stripped.tmp > $OUTPUT_CHI
+../../awk/insertblanklines.awk -v field="$form_dat_XVar" out_filtered_appended.tmp > $OUTPUT_DAT
 
-# Subtract minimum
-# output: OUTPUT_CHIDIFF
+# Get allowed region
+# output: OUTPUT_CHI
 
-awk -v min=$min '{ if ($0!="") {print $1, $2, ($3-min)} else {print }; }' $OUTPUT_CHI > $OUTPUT_CHIDIFF
+../../awk/getallowed.awk $OUTPUT_DAT > $OUTPUT_ALLOWED_DAT
 
 # Make headers
 
-sed -i "1s/.*/${FIELD[${form_dat_XVar}]} ${FIELD[${form_dat_YVar}]} chisq /" $OUTPUT_CHI
-sed -i "1s/.*/${FIELD[${form_dat_XVar}]} ${FIELD[${form_dat_YVar}]} chisqdiff /" $OUTPUT_CHIDIFF
+header="$(head -n1 ${INPUT})"
+header=$(echo "$header" |sed 's/[[:space:]]\+/ /g')
+header=$(echo "$header chisqdiff")
+
+sed -i "1s/.*/$header/" $OUTPUT_DAT
+sed -i "1s/.*/$header/" $OUTPUT_ALLOWED_DAT
+
+#sed -i "1s/.*/${FIELD[${form_dat_XVar}]} ${FIELD[${form_dat_YVar}]} chisq /" $OUTPUT_CHI
+#sed -i "1s/.*/${FIELD[${form_dat_XVar}]} ${FIELD[${form_dat_YVar}]} chisqdiff /" $OUTPUT_CHIDIFF
 
 # Make gnuplot config file
 
@@ -95,3 +106,6 @@ echo "infobox_val5 = ${form_dat_filterval5}" >> $OUTPUT_GNUPLOT
 
 echo "xlab = \"${axis_label[${form_dat_XVar}]}\"" >> $OUTPUT_GNUPLOT
 echo "ylab = \"${axis_label[${form_dat_YVar}]}\"" >> $OUTPUT_GNUPLOT
+
+echo "XVar = \"${form_dat_XVar}\"" >> $OUTPUT_GNUPLOT
+echo "YVar = \"${form_dat_YVar}\"" >> $OUTPUT_GNUPLOT

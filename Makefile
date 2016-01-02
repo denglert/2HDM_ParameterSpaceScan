@@ -3,7 +3,10 @@
 ###########################
 
 #form_dat_job_tag = job_cba_tb_50_50
-form_dat_job_tag = job_cba_tb_201_by_201
+#form_dat_job_tag = job_cba_tb_201_by_201
+#form_dat_out_tag = output
+
+form_dat_job_tag = job_cba_tb_51_51
 form_dat_out_tag = output
 
 form_dat_mh    = 125.000000 # Field 1
@@ -45,7 +48,10 @@ EXPORT_FORM_DAT := $(foreach v,$(VAR_FORM_DAT),$(v)='$($(v))')
 #fig_job_tag = job_cba_tb_50_50
 #fig_out_tag = reduced_test
 
-fig_job_tag = job_cba_tb_201_by_201
+#fig_job_tag = job_cba_tb_201_by_201
+#fig_out_tag = output
+
+fig_job_tag = job_cba_tb_51_51
 fig_out_tag = output
 
 ##############################################
@@ -53,7 +59,7 @@ fig_out_tag = output
 test :
 
 figures : 
-	@mkdir figures/$(fig_job_tag); cd figures/$(fig_job_tag); ../../gnuplot/plot_all.sh $(fig_job_tag) $(fig_out_tag)
+	@mkdir -p figures/$(fig_job_tag); cd figures/$(fig_job_tag); ../../gnuplot/plot_all.sh $(fig_job_tag) $(fig_out_tag)
 #	cd figures/$(fig_job_tag); gnuplot -e "config=../../output/${fig_job_tag}/${fig_out_tag}_gnu.conf; ../../gnuplot/chisq_distr.gnu
 
 format_data : 
