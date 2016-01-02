@@ -155,10 +155,10 @@ vac = 246
 set xrange [370:470]
 
 set xlabel "m_{A} [GeV/c^{2}]"
-splot dataFILE every :::1 using mA:YVar:chidiff,\
-		dataFILE every :::1 using mA:YVar:(column(stb)==1?-1/0:1) with points pt 2 lc -1, \
-		dataFILE every :::1 using mA:YVar:(column(uni)==1?-1/0:1) with points pt 7 lc  5, \
-		dataFILE every :::1 using mA:YVar:(column(per)==1?-1/0:1) with points pt 4 lc 13
+splot dataFILE every :::1 using mA:YVar:chidiff
+#		dataFILE every :::1 using mA:YVar:(column(stb)==1?-1/0:1) with points pt 2 lc -1, \
+#		dataFILE every :::1 using mA:YVar:(column(uni)==1?-1/0:1) with points pt 7 lc  5, \
+#		dataFILE every :::1 using mA:YVar:(column(per)==1?-1/0:1) with points pt 4 lc 13
 
 
 
