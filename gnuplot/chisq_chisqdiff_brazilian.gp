@@ -19,6 +19,7 @@ chi     = 8
 chidiff = 16
 mA      = 13
 XVar    = 3
+hbobs   = 9
 stb     = 10
 uni     = 11
 per     = 12
@@ -116,7 +117,7 @@ set palette defined ( sigma1 "green",  sigma2 "yellow", sigma3 "blue", 15 "white
 set cntrparam bspline
 set cntrparam levels discrete sigma1,sigma2,sigma3
 
-boxh = 0.66
+boxh = 0.70
 unset object
 set object 1 rect from screen (labelx-0.01),(labely-0.02) to screen (labelx+boxw),(labely-boxh) front fillcolor rgb "white" fillstyle solid border -1
 
@@ -132,11 +133,13 @@ set label "3 {/Symbol s} exp. fit allowed" at screen labelx,(labely-(8*rowspace)
 set label "{/ZapfDingbats 5} stb. excluded" at screen labelx,(labely-(9*rowspace)) textcolor rgbcolor "black" front
 set label "{/ZapfDingbats l} uni. excluded" at screen labelx,(labely-(10*rowspace)) textcolor rgbcolor "cyan" front
 set label "{/ZapfDingbats o} per. excluded" at screen labelx,(labely-(11*rowspace)) textcolor rgbcolor "magenta" front
+set label "{/ZapfDingbats ;} HB. 95% CL. excl." at screen labelx,(labely-(12*rowspace)) textcolor rgbcolor "red" front
 
 splot dataFILE every :::1 using XVar:YVar:chidiff, \
-		dataFILE every :::1 using XVar:YVar:(column(stb)==1?-1/0:1) with points pt 2 lc -1, \
-		dataFILE every :::1 using XVar:YVar:(column(uni)==1?-1/0:1) with points pt 7 lc  5, \
-		dataFILE every :::1 using XVar:YVar:(column(per)==1?-1/0:1) with points pt 4 lc 13
+		dataFILE every :::1 using XVar:YVar:(column(stb)==1 ? 1/0:1) with points pt 2 lc -1, \
+		dataFILE every :::1 using XVar:YVar:(column(uni)==1 ? 1/0:1) with points pt 7 lc  5, \
+		dataFILE every :::1 using XVar:YVar:(column(per)==1 ? 1/0:1) with points pt 4 lc 13, \
+		dataFILE every :::1 using XVar:YVar:(column(hbobs) < 1.0 ? 1/0 : 1) with points pt 1 lc 1
 
 ############################
 ### - Allowed regions -- ###

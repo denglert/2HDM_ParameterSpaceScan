@@ -6,8 +6,9 @@ BEGIN{
 	stability=1
 	unitarity=1
 	perturbativity=1
+	hobs=1
 	  }
 { 
-	if ( ($0 != "") && ($16 < sigma3) && ($10 == stability) && ($11 == unitarity) && ($12 == perturbativity) )
+	if ( ($0 != "") && ($16 < sigma3) && ($9 < hobs) && ($10 == stability) && ($11 == unitarity) && ($12 == perturbativity) )
 	print $0
 }
