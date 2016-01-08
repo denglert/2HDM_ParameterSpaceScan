@@ -1,12 +1,12 @@
 # 2HDM Parameter space excluded/allowed regions
 
-Reference software:
+# Reference software:
 
-2HDMC - https://2hdmc.hepforge.org
+### 2HDMC - https://2hdmc.hepforge.org
 
-HiggsBounds - http://higgsbounds.hepforge.org
+### HiggsBounds - http://higgsbounds.hepforge.org
 
-HiggsSignals - http://higgsbounds.hepforge.org
+### HiggsSignals - http://higgsbounds.hepforge.org
 
 Distributed under GNU General Public License: http://www.gnu.org/licenses/
 
