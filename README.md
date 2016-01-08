@@ -14,7 +14,7 @@ Distributed under GNU General Public License: http://www.gnu.org/licenses/
 
 # Quicklinks:
 
-## (cos(beta-alpha),tan(beta)) parameter plane mH=300 GeV/c^2:
+## (cos(beta-&alpha;),tan(beta)) parameter plane mH=300 GeV/c^2:
  
 ### Figures:
 https://github.com/denglert/2HDM_ParameterSpaceScan/tree/master/figures/job_cba_tb_51_51
