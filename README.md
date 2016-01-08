@@ -1,4 +1,4 @@
-# 2HDM Parameter space allowed regions
+# 2HDM Parameter space excluded/allowed regions
 
 Reference software:
 
