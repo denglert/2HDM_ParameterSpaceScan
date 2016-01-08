@@ -155,7 +155,7 @@ vac = 246
 
 #mA(x)=sqrt(mH*mH*(1-x*x) + mh*mh*x*x-Z5*vac*vac)
 
-set xrange [370:470]
+#set xrange [370:470]
 
 set xlabel "m_{A} [GeV/c^{2}]"
 splot dataFILE every :::1 using mA:YVar:chidiff

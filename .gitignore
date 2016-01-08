@@ -3,3 +3,4 @@ bin/*
 output/*
 qsub/task_ParamScan_Multi.sh.*
 Key.dat
+HS_analyses.txt

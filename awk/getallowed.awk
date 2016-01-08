@@ -1,4 +1,6 @@
 #!/bin/awk -f
+# Get lines which satisfy the criteria
+
 BEGIN{
 	sigma1=2.30; 
 	sigma2=6.18;

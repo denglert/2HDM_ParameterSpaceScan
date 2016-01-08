@@ -3,19 +3,11 @@
 #####################
 ### Configuration ###
 
-#TAG="job_wide_6_by_6"
-#CONFIG="ParamSpace_Wide.config"
-#CONFIG="ParamSpace.config"
+# Variables 'TAG', 'CONFIG' and 'WRITELHA' need to be set.
 
-#TAG="job_cba_tb_201_by_201"
-#CONFIG="ParamSpace_cba_tb_51_51.config"
-
-#TAG="job_mH_cba_tb"
-#CONFIG="ParamSpace_mH_cba_tb.config"
-
-TAG="job_Z4_Z5_Z7_cba_tb"
-CONFIG="ParamSpace_Z4_Z5_Z7_cba_tb.config"
-WRITELHA=0
+#TAG="job_Z4_Z5_Z7_cba_tb"
+#CONFIG="ParamSpace_Z4_Z5_Z7_cba_tb.config"
+#WRITELHA=0
 
 ##################################
 ### Setting up the environment ###

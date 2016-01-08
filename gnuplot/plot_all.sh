@@ -7,7 +7,19 @@ gnuplot -e "config=\"../../output/${fig_job_tag}/${fig_out_tag}_gnu.conf\"" ../.
 
 echo "$PWD"
 
+### Convert .ps to .pdf if .pdf.
 for x in *.ps; do
-	echo $x;
-	ps2pdf $x ${x/%ps/pdf};
+	echo "Converting $x";
+		ps2pdf $x ${x/%ps/pdf};
 done
+
+### Convert .ps to .pdf if .pdf doesn't exist.
+#for x in *.ps; do
+#	if [ -f ${x/%ps/pdf} ];
+#	then
+#		echo "${x/%ps/pdf} already exists";
+#	else
+#	echo "Converting $x";
+#		ps2pdf $x ${x/%ps/pdf};
+#	fi
+#done
