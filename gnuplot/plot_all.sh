@@ -15,7 +15,7 @@ done
 
 # Compress the pdf-s
 tar -cvf "${fig_job_tag}_pdfs.tar" *.pdf
-gzip ${fig_job_tag}.tar
+gzip ${fig_job_tag}_pdfs.tar
 
 ### Convert .ps to .pdf if .pdf doesn't exist.
 #for x in *.ps; do

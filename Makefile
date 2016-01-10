@@ -2,38 +2,49 @@
 ### --- Makefile for 2HDM Parameter space scan --- ###
 ######################################################
 
-#################################
-### -- Interactive job run -- ###
-#################################
+#############################
+### -- Interactive run -- ###
+#############################
+
+#run_TASK     = "task_ParamScan_Multi.sh"
+#run_TAG      = "test1234"
+#run_CONFIG   = "ParamSpace.config"
+#run_WRITELHA = 0
 
 run_TASK     = "task_ParamScan_Multi.sh"
-run_TAG      = "test1234"
-run_CONFIG   = "ParamSpace.config"
+run_TAG      = "test_mHc_eq_mH"
+run_CONFIG   = "ParamSpace_mHc_eq_mH.config"
 run_WRITELHA = 0
+
 
 # Extract Makefile variables having 'run_' string; strip the prefix 'run_';
 # make <varname>=<varvalue> pairs; pass these variable list to shell
 
-VAR_RUN    := $(shell echo '$(.VARIABLES)' |  awk -v RS=' ' '/run_/' | sed 's/run_//g' )
-EXPORT_RUN := $(foreach v,$(VAR_RUN),$(v)="$(run_$(v))")
+VAR_RUN    = $(shell echo '$(.VARIABLES)' |  awk -v RS=' ' '/run_/' | sed 's/run_//g' )
+EXPORT_RUN = $(foreach v,$(VAR_RUN),$(v)="$(run_$(v))")
 
-####################################
-### -- Job submission to qsub -- ###
-####################################
+################################
+### -- Submit job to qsub -- ###
+################################
 
 #job_RESOURCELIST = "walltime=60:00:00"
-job_RESOURCELIST = "walltime=00:05:00"
+#job_TASK     	  = "task_ParamScan_Multi.sh"
+#job_TAG      	  = "job_test4321"
+#job_CONFIG   	  = "ParamSpace.config"
+#job_WRITELHA 	  = 0
+
+job_RESOURCELIST = ""
 job_TASK     	  = "task_ParamScan_Multi.sh"
-job_TAG      	  = "job_test4321"
-job_CONFIG   	  = "ParamSpace.config"
+job_TAG      	  = "job_mHc_eq_mH_500"
+job_CONFIG   	  = "ParamSpace_mHc_eq_mH.config"
 job_WRITELHA 	  = 0
 
-VAR_JOB    := $(shell echo '$(.VARIABLES)' |  awk -v RS=' ' '/job_/' | sed 's/job_//g' )
-EXPORT_JOB := $(foreach v,$(VAR_JOB),$(v)="$(job_$(v))")
+VAR_JOB    = $(shell echo '$(.VARIABLES)' |  awk -v RS=' ' '/^job_/' | sed 's/job_//g' )
+EXPORT_JOB = $(foreach v,$(VAR_JOB),$(v)="$(job_$(v))")
 
-#############################
-### -- Formatting data -- ###
-#############################
+#########################
+### -- Format data -- ###
+#########################
 
 #form_dat_job_tag = job_cba_tb_50_50
 #form_dat_job_tag = job_cba_tb_201_by_201
@@ -42,16 +53,20 @@ EXPORT_JOB := $(foreach v,$(VAR_JOB),$(v)="$(job_$(v))")
 #form_dat_job_tag = job_cba_tb_51_51
 #form_dat_out_tag = output
 
-form_dat_job_tag = job_mH_cba_tb
-form_dat_out_tag = output_mH_${form_dat_mH}
+#form_dat_job_tag = job_mH_cba_tb
+#form_dat_out_tag = output_mH_${form_dat_mH}
+
+form_dat_job_tag = job_mHc_eq_mH_500
+form_dat_out_tag = output
 
 form_dat_mh    = 125.000000# Field 1
-form_dat_mH    = 333.333333# Field 2
+form_dat_mH    = 500.000000# Field 2
+#form_dat_mH    = 333.333333# Field 2
 #form_dat_mH    = 377.777778# Field 2
 #form_dat_mH    = 422.222222# Field 2
 form_dat_cosba =   0.000000# Field 3
 form_dat_tanb  =   0.000000# Field 4 
-form_dat_Z4    =  -2.000000# Field 5
+form_dat_Z4    =   2.000000# Field 5
 form_dat_Z5    =  -2.000000# Field 6
 form_dat_Z7    =   0.000000# Field 7
 
@@ -62,11 +77,6 @@ form_dat_filterfield2 = 2
 form_dat_filterfield3 = 5
 form_dat_filterfield4 = 6
 form_dat_filterfield5 = 7
-
-###
-
-#form_dat_job_tag = job_wide_6_by_6
-#form_dat_out_tag = reduced_test
 
 #######
 
@@ -82,9 +92,9 @@ form_dat_filterval5 = $(form_dat_Z7)
 VAR_FORM_DAT    := $(shell echo '$(.VARIABLES)' |  awk -v RS=' ' '/form_dat/')
 EXPORT_FORM_DAT := $(foreach v,$(VAR_FORM_DAT),$(v)='$($(v))')
 
-############################
-### -- Making figures -- ###
-############################
+##########################
+### -- Make figures -- ###
+##########################
 
 #fig_job_tag = job_cba_tb_50_50
 #fig_out_tag = reduced_test
@@ -95,11 +105,13 @@ EXPORT_FORM_DAT := $(foreach v,$(VAR_FORM_DAT),$(v)='$($(v))')
 #fig_job_tag = job_cba_tb_51_51
 #fig_out_tag = output
 
-fig_job_tag = job_mH_cba_tb
-fig_out_tag = output_mH_${form_dat_mH}
+#fig_job_tag = job_mH_cba_tb
+#fig_out_tag = output_mH_${form_dat_mH}
+
+fig_job_tag = job_mHc_eq_mH_500
+fig_out_tag = output
 
 ###################################################################################
-
 
 test :
 	@echo "This is VAR_RUN:"
@@ -107,10 +119,11 @@ test :
 	@echo "This is EXPORT_RUN:"
 	@echo "$(EXPORT_JOB)"
 
-run :
+run : build
 	@mkdir -p output/$(run_TAG); $(EXPORT_RUN) ./tasks/$(run_TASK); 
 
 submit_job :
+	@if [ -d ./output/$(job_TAG) ]; then cp -f ./output/$(job_TAG) ./backup/$(job_TAG); rm -rf output/$(job_TAG); fi;
 	@mkdir -p output/$(job_TAG)
 	@cp ./tasks/$(job_TASK) ./output/$(job_TAG)/$(job_TASK)
 	@echo $(EXPORT_JOB) | tr " " "\n" | awk 'NF > 0' | sort | cat - ./output/$(job_TAG)/$(job_TASK) > temp; echo "#!/bin/sh" | cat - temp > temp2  && mv temp2 ./output/$(job_TAG)/$(job_TASK)

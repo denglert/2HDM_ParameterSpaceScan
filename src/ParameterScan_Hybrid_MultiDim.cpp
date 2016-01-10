@@ -225,7 +225,7 @@ int main(int argc, char* argv[]) {
 
   std::ofstream file_param_chisq;
   file_param_chisq.open(filename_param_chisq.c_str(), std::ios_base::app);
-  std::string line = Form("%12.6f %12.6f %12.6f %12.6f %12.6f %12.6f %12.6f %12.6f %12.6e %4d %4d %4d    %12.6f %12.6e %12.6e \n", mh_in, mH_in, cba_in, tanb_in, Z4_in, Z5_in, Z7_in, csqtot, tot_hbobs, BitAllowedStability, BitAllowedUnitarity, BitAllowedPerturbaticity, mA, Gamma_h, Gamma_A );
+  std::string line = Form("%.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6e %d %d %d %.6f %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e\n", mh_in, mH_in, cba_in, tanb_in, Z4_in, Z5_in, Z7_in, csqtot, tot_hbobs, BitAllowedStability, BitAllowedUnitarity, BitAllowedPerturbaticity, mA, Gamma_h, Gamma_A, S, T, U, V, W, X );
   file_param_chisq << line.c_str();
 
   HB_finish();

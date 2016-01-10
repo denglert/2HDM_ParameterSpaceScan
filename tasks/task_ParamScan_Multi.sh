@@ -14,7 +14,7 @@
 
 WORKDIR=/home/de3u14/lib/projects/2HDM/2HDM_ParameterSpaceScan/
 cd $WORKDIR
-source ./qsub/$CONFIG
+source ./config/$CONFIG
 source ~/lib/build/hep/root/bin/thisroot.sh
 module load gsl
 
@@ -29,13 +29,13 @@ mkdir output/$TAG
 mkdir output/$TAG/LHA
 
 # Make copy of the .config file
-cp ./qsub/$CONFIG ./output/$TAG/
+cp ./config/$CONFIG ./output/$TAG/
 
 
 # Make header for the .dat file
 # mh mH cba tb, Z4, Z5, Z7, chisq, tot_hbobs, stability, unitarity,
 # perturbativity, mA, GammaA, Gammah 
-echo "    mh           mH           cba           tb          Z4            Z5          Z7           chisq      tot_hbobs    stb  uni  per       mA        Gamma_h     Gamma_A" > $file_param_chisq
+echo "mh mH cba tb Z4 Z5 Z7 chisq tot_hbobs stb uni per mA Gamma_h Gamma_A S T U V W X " > $file_param_chisq
 
 # Division by zero test
 if [ $nmhBins -eq 1 ]; then
