@@ -1,10 +1,10 @@
 
-OBJ_ParameterScan = ../lib/ParameterScan.cpp.o
+OBJ_ParameterScan_Physical_MultiDim = ../lib/ParameterScan_Physical_MultiDim.cpp.o
 OBJ_ParameterScan_Hybrid_MultiDim = ../lib/ParameterScan_Hybrid_MultiDim.cpp.o
 
 CMN =
 
-binaries : ../bin/ParameterScan_Hybrid_MultiDim
+binaries : ../bin/ParameterScan_Hybrid_MultiDim ../bin/ParameterScan_Physical_MultiDim
 
 #######
 
@@ -26,6 +26,15 @@ endif
 ifeq ($(LINKER),g++)
 	$(CC) $^ $(CLFLAGS) -o $@
 endif
+
+../bin/ParameterScan_Physical_MultiDim: $(OBJ_ParameterScan_Physical_MultiDim)
+ifeq ($(LINKER),ifort)
+	$(FC) -o $@ $^ $(FLFLAGS) 
+endif
+ifeq ($(LINKER),g++)
+	$(CC) $^ $(CLFLAGS) -o $@
+endif
+
 
 ####################
 ## -- Linking -- ###
