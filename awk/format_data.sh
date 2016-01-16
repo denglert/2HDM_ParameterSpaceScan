@@ -24,7 +24,7 @@ FIELD[8]="chisq"
 awk \
 	-v form_dat_filterval1="$form_dat_filterval1" -v form_dat_filterval2="$form_dat_filterval2" -v form_dat_filterval3="$form_dat_filterval3" -v form_dat_filterval4="$form_dat_filterval4" -v form_dat_filterval5="$form_dat_filterval5" \
 	-v form_dat_filterfield1="$form_dat_filterfield1" -v form_dat_filterfield2="$form_dat_filterfield2" -v form_dat_filterfield3="$form_dat_filterfield3" -v form_dat_filterfield4="$form_dat_filterfield4" -v form_dat_filterfield5="$form_dat_filterfield5" \
-	 'NR>1 && ($form_dat_filterfield1 == form_dat_filterval1) && ($form_dat_filterfield2 == form_dat_filterval2) && ($form_dat_filterfield3 = form_dat_filterval3) && ($form_dat_filterfield4 == form_dat_filterval4) && ($form_dat_filterfield5 == form_dat_filterval5)' \
+	 'NR>1 && ($form_dat_filterfield1 == form_dat_filterval1) && ($form_dat_filterfield2 == form_dat_filterval2) && ($form_dat_filterfield3 == form_dat_filterval3) && ($form_dat_filterfield4 == form_dat_filterval4) && ($form_dat_filterfield5 == form_dat_filterval5)' \
 	${INPUT} | sort -gk${form_dat_XVar} -gk${form_dat_YVar} > out_filtered.tmp
 
 # Find minimum

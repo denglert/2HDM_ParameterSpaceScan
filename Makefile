@@ -11,15 +11,20 @@
 #run_CONFIG   = "ParamSpace.config"
 #run_WRITELHA = 0
 
-#run_TASK     = "task_ParamScan_Multi.sh"
-#run_TAG      = "interactive_mHc_eq_mH"
-#run_CONFIG   = "ParamSpace_mHc_eq_mH.config"
+run_TASK     = "task_ParamScan_Multi.sh"
+run_TAG      = "run_Hybrid_low_mA"
+run_CONFIG   = "ParamSpace_low_mA.config"
+run_WRITELHA = 0
+
+#run_TASK     = "task_ParamScan_Physical_Multi.sh"
+#run_TAG      = "Physical_test"
+#run_CONFIG   = "ParamSpace_Physical_default.config"
 #run_WRITELHA = 0
 
-run_TASK     = "task_ParamScan_Physical_Multi.sh"
-run_TAG      = "Physical_test"
-run_CONFIG   = "ParamSpace_Physical_default.config"
-run_WRITELHA = 0
+#run_TASK     = "task_ParamScan_Physical_LinCos.sh"
+#run_TAG      = "Physical_LinCos_test"
+#run_CONFIG   = "ParamSpace_Physical_Cos_default.config"
+#run_WRITELHA = 0
 
 # Extract Makefile variables having 'run_' string; strip the prefix 'run_';
 # make <varname>=<varvalue> pairs; pass these variable list to shell
@@ -43,11 +48,12 @@ EXPORT_RUN = $(foreach v,$(VAR_RUN),$(v)="$(run_$(v))")
 #job_CONFIG   	  = "ParamSpace_mHc_eq_mH.config"
 #job_WRITELHA 	  = 0
 
+#job_RESOURCELIST = "walltime=60:00:00"
 #job_RESOURCELIST = ""
-job_RESOURCELIST = "walltime=60:00:00"
-job_TASK     	  = "task_ParamScan_Physical_Multi.sh"
-job_TAG      	  = "job_Physical_v_alpha"
-job_CONFIG   	  = "ParamSpace_Physical_job.config"
+job_RESOURCELIST = "walltime=10:00:00"
+job_TASK     	  = "task_ParamScan_Multi.sh"
+job_TAG      	  = "Hybrid_job_low_mA_sweep_mH"
+job_CONFIG   	  = "ParamSpace_Hybrid_job_low_mA.config"
 job_WRITELHA 	  = 0
 
 VAR_JOB    = $(shell echo '$(.VARIABLES)' |  awk -v RS=' ' '/^job_/' | sed 's/job_//g' )
@@ -68,35 +74,59 @@ EXPORT_JOB = $(foreach v,$(VAR_JOB),$(v)="$(job_$(v))")
 #form_dat_out_tag = output_mH_${form_dat_mH}
 
 #form_dat_job_tag = job_mHc_eq_mH_500
-form_dat_job_tag = interactive_mHc_eq_mH
+#form_dat_job_tag = interactive_mHc_eq_mH
+#form_dat_out_tag = output
+
+#form_dat_job_tag = Physical_LinCos_run2
+#form_dat_job_tag = Physical_LinCos_mH_400_mA_150
+form_dat_job_tag = Physical_LinCos_mA_150_mH_300
 form_dat_out_tag = output
 
+
 form_dat_mh    = 125.000000# Field 1
-form_dat_mH    = 480.000000# Field 2
+form_dat_mH    = 300.000000# Field 2
 #form_dat_mH    = 333.333333# Field 2
 #form_dat_mH    = 377.777778# Field 2
 #form_dat_mH    = 422.222222# Field 2
 form_dat_cosba =   0.000000# Field 3
 form_dat_tanb  =   0.000000# Field 4 
+
 form_dat_Z4    =  -3.100000# Field 5
 form_dat_Z5    =   3.100000# Field 6
 form_dat_Z7    =   0.000000# Field 7
 
+form_dat_l6    =   0.000000e+00# Field 17
+form_dat_l7    =   0.000000e+00# Field 18
+form_dat_m12_2 =   1.580000e+04# Field 19
+
 form_dat_XVar = 3
 form_dat_YVar = 4
+
+#form_dat_filterfield1 = 1
+#form_dat_filterfield2 = 2
+#form_dat_filterfield3 = 5
+#form_dat_filterfield4 = 6
+#form_dat_filterfield5 = 7
+
 form_dat_filterfield1 = 1
 form_dat_filterfield2 = 2
-form_dat_filterfield3 = 5
-form_dat_filterfield4 = 6
-form_dat_filterfield5 = 7
+form_dat_filterfield3 = 17
+form_dat_filterfield4 = 18
+form_dat_filterfield5 = 19
 
 #######
 
+#form_dat_filterval1 = $(form_dat_mh)
+#form_dat_filterval2 = $(form_dat_mH)
+#form_dat_filterval3 = $(form_dat_Z4)
+#form_dat_filterval4 = $(form_dat_Z5)
+#form_dat_filterval5 = $(form_dat_Z7)
+
 form_dat_filterval1 = $(form_dat_mh)
 form_dat_filterval2 = $(form_dat_mH)
-form_dat_filterval3 = $(form_dat_Z4)
-form_dat_filterval4 = $(form_dat_Z5)
-form_dat_filterval5 = $(form_dat_Z7)
+form_dat_filterval3 = $(form_dat_l6)
+form_dat_filterval4 = $(form_dat_l7)
+form_dat_filterval5 = $(form_dat_m12_2)
 
 # Extract Makefile variables having 'form_dat' string; make <varname>=<varvalue>
 # pairs; pass these variable list to shell
@@ -121,7 +151,13 @@ EXPORT_FORM_DAT := $(foreach v,$(VAR_FORM_DAT),$(v)='$($(v))')
 #fig_out_tag = output_mH_${form_dat_mH}
 
 #fig_job_tag = job_mHc_eq_mH_500
-fig_job_tag = interactive_mHc_eq_mH
+
+#fig_job_tag = interactive_mHc_eq_mH
+#fig_out_tag = output
+
+#fig_job_tag = Physical_LinCos_mH_400_mA_150
+
+fig_job_tag = Physical_LinCos_mA_150_mH_300
 fig_out_tag = output
 
 ###################################################################################

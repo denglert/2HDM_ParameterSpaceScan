@@ -16,7 +16,7 @@ fig_brazilian = formTAG."_brazilian.ps"
 fig_brazilian_mA = formTAG."_brazilian_mA.ps"
 
 chi     = 8
-chidiff = 22
+chidiff = 26
 mA      = 13
 XVar    = 3
 hbobs   = 9
@@ -136,9 +136,9 @@ set label "{/ZapfDingbats o} per. excluded" at screen labelx,(labely-(11*rowspac
 set label "{/ZapfDingbats ;} HB. 95% CL. excl." at screen labelx,(labely-(12*rowspace)) textcolor rgbcolor "red" front
 
 splot dataFILE every :::1 using XVar:YVar:chidiff, \
+		dataFILE every :::1 using XVar:YVar:(column(per)==1 ? 1/0:1) with points pt 4 lc 13, \
 		dataFILE every :::1 using XVar:YVar:(column(stb)==1 ? 1/0:1) with points pt 2 lc -1, \
 		dataFILE every :::1 using XVar:YVar:(column(uni)==1 ? 1/0:1) with points pt 7 lc  5, \
-		dataFILE every :::1 using XVar:YVar:(column(per)==1 ? 1/0:1) with points pt 4 lc 13, \
 		dataFILE every :::1 using XVar:YVar:(column(hbobs) < 1.0 ? 1/0 : 1) with points pt 1 lc 1
 
 ############################

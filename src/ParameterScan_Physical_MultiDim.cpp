@@ -32,16 +32,6 @@ int main(int argc, char* argv[]) {
   double m12_2_in  = (double)atof(argv[11]);
   int yt_in        = (int)atoi(argv[12]);
 
-  printf("Inside ParameterScan_Hybrid_MultiDim\n");
-  printf("mh:       %8.4f\n", mh_in);
-  printf("mH:       %8.4f\n", mH_in);
-  printf("mA:       %8.4f\n", mA_in);
-  printf("mHc:      %8.4f\n", mHc_in);
-  printf("sin(b-a): %8.4f\n", sba_in);
-  printf("tan(b):   %8.4f\n", tanb_in);
-  printf("l6:       %8.4f\n", l6_in);
-  printf("l7:       %8.4f\n", l7_in);
-  printf("m12_2:       %8.4f\n", m12_2_in);
 
   // Reference SM Higgs mass for EW precision observables
   double mh_ref = 125.;
@@ -206,6 +196,17 @@ int main(int argc, char* argv[]) {
   double mh,mH,cba,tanb,Z4,Z5,Z7;
   model.get_param_hybrid(mh,mH,cba,Z4,Z5,Z7,tanb);
 
+  printf("Inside ParameterScan_Hybrid_MultiDim\n");
+  printf("mh:       %8.4f\n", mh_in);
+  printf("mH:       %8.4f\n", mH_in);
+  printf("mA:       %8.4f\n", mA_in);
+  printf("mHc:      %8.4f\n", mHc_in);
+  printf("cos(b-a): %8.4f\n", cba);
+  printf("sin(b-a): %8.4f\n", sba_in);
+  printf("tan(b):   %8.4f\n", tanb_in);
+  printf("l6:       %8.4f\n", l6_in);
+  printf("l7:       %8.4f\n", l7_in);
+  printf("m12_2:       %8.4f\n", m12_2_in);
 
   ///////////////////
   // Write to file //
