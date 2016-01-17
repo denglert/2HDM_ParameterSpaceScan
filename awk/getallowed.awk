@@ -11,6 +11,6 @@ BEGIN{
 	hobs=1
 	  }
 { 
-	if ( ($0 != "") && ($16 < sigma3) && ($9 < hobs) && ($10 == stability) && ($11 == unitarity) && ($12 == perturbativity) )
+	if ( ($0 != "") && ($26 < sigma3) && ($9 < hobs) && ($10 == stability) && ($11 == unitarity) && ($12 == perturbativity) )
 	print $0
 }
