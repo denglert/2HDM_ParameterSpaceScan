@@ -12,7 +12,7 @@
 #run_WRITELHA = 0
 
 run_TASK     = "task_ParamScan_Multi.sh"
-run_TAG      = "run_Hybrid_low_mA"
+run_TAG      = "run_Hybrid_low_mA_mH_350_detailed"
 run_CONFIG   = "ParamSpace_low_mA.config"
 run_WRITELHA = 0
 
@@ -81,12 +81,14 @@ EXPORT_JOB = $(foreach v,$(VAR_JOB),$(v)="$(job_$(v))")
 #form_dat_job_tag = Physical_LinCos_mH_400_mA_150
 #form_dat_job_tag = Physical_LinCos_mA_150_mH_300
 
-form_dat_job_tag = run_Hybrid_low_mA
-form_dat_out_tag = output
+#form_dat_job_tag = run_Hybrid_low_mA
+#form_dat_out_tag = output
 
+form_dat_job_tag = run_Hybrid_low_mA_mH_350_detailed
+form_dat_out_tag = output_form_dat_mH_$(form_dat_mH)
 
 form_dat_mh    = 125.000000# Field 1
-form_dat_mH    = 320.000000# Field 2
+form_dat_mH    = 350.000000# Field 2
 #form_dat_mH    = 333.333333# Field 2
 #form_dat_mH    = 377.777778# Field 2
 #form_dat_mH    = 422.222222# Field 2
@@ -160,8 +162,9 @@ EXPORT_FORM_DAT := $(foreach v,$(VAR_FORM_DAT),$(v)='$($(v))')
 #fig_job_tag = Physical_LinCos_mH_400_mA_150
 
 #fig_job_tag = Physical_LinCos_mA_150_mH_300
-fig_job_tag = run_Hybrid_low_mA
-fig_out_tag = output
+#fig_job_tag = Hybrid_job_low_mA_sweep_mH
+fig_job_tag = run_Hybrid_low_mA_mH_350_detailed
+fig_out_tag = $(form_dat_out_tag)
 
 ###################################################################################
 

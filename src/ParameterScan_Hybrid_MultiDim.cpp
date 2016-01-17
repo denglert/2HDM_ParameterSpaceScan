@@ -187,7 +187,7 @@ int main(int argc, char* argv[]) {
   // table.print_decays(4);
 
   double Hvev_2 = sm.get_v2();
-  double mA = sqrt(mH_in*mH_in*(1-cba_in*cba_in) + mh_in*mh_in*cba_in*cba_in-Z5_in*Hvev_2);
+//  double mA = sqrt(mH_in*mH_in*(1-cba_in*cba_in) + mh_in*mh_in*cba_in*cba_in-Z5_in*Hvev_2);
 
   // From 2HDMC:
   //  const char *hnames[6] = {" ","h ", "H ", "A ", "H+", "H-"};
@@ -215,7 +215,8 @@ int main(int argc, char* argv[]) {
   model.write_LesHouches(filename_LHA.c_str(), 1, 0, 1, 1);
   }
 
-
+   double mh,mH,mA,mHp,sinba,l6,l7,m12_2,tb;
+	model.get_param_phys(mh,mH,mA,mHp,sinba,l6,l7,m12_2,tb);
 
   ///////////////////////////////
   // Write parameters and chi2 //
@@ -225,7 +226,7 @@ int main(int argc, char* argv[]) {
 
   std::ofstream file_param_chisq;
   file_param_chisq.open(filename_param_chisq.c_str(), std::ios_base::app);
-  std::string line = Form("%.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6e %d %d %d %.6f %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e\n", mh_in, mH_in, cba_in, tanb_in, Z4_in, Z5_in, Z7_in, csqtot, tot_hbobs, BitAllowedStability, BitAllowedUnitarity, BitAllowedPerturbaticity, mA, Gamma_h, Gamma_A, S, T, U, V, W, X );
+  std::string line = Form("%.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6e %d %d %d %.6f %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e\n", mh_in, mH_in, cba_in, tanb_in, Z4_in, Z5_in, Z7_in, csqtot, tot_hbobs, BitAllowedStability, BitAllowedUnitarity, BitAllowedPerturbaticity, mA, Gamma_h, Gamma_A, mHp, l6, l7, m12_2, S, T, U, V, W, X );
   file_param_chisq << line.c_str();
 
   HB_finish();

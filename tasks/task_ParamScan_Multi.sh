@@ -35,7 +35,7 @@ cp ./config/$CONFIG ./output/$TAG/
 # Make header for the .dat file
 # mh mH cba tb, Z4, Z5, Z7, chisq, tot_hbobs, stability, unitarity,
 # perturbativity, mA, GammaA, Gammah 
-echo "mh mH cba tb Z4 Z5 Z7 chisq tot_hbobs stb uni per mA Gamma_h Gamma_A S T U V W X " > $file_param_chisq
+echo "mh mH cba tb Z4 Z5 Z7 chisq tot_hbobs stb uni per mA Gamma_h Gamma_A mHc l6 l7 m12_2 S T U V W X " > $file_param_chisq
 
 # Division by zero test
 if [ $nmhBins -eq 1 ]; then

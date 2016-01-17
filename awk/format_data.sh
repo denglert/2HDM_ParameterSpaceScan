@@ -85,7 +85,6 @@ axis_label[5]="Z4"
 axis_label[6]="Z5"
 axis_label[7]="Z7"
 
-
 rm -f ${OUTPUT_GNUPLOT}
 touch ${OUTPUT_GNUPLOT}
 
