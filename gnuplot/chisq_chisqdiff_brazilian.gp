@@ -16,7 +16,8 @@ fig_brazilian = formTAG."_brazilian.ps"
 fig_brazilian_mA = formTAG."_brazilian_mA.ps"
 
 chi     = 8
-chidiff = 26
+#chidiff = 26
+chidiff = 22
 mA      = 13
 XVar    = 3
 hbobs   = 9

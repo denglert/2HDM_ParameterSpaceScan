@@ -79,20 +79,22 @@ EXPORT_JOB = $(foreach v,$(VAR_JOB),$(v)="$(job_$(v))")
 
 #form_dat_job_tag = Physical_LinCos_run2
 #form_dat_job_tag = Physical_LinCos_mH_400_mA_150
-form_dat_job_tag = Physical_LinCos_mA_150_mH_300
+#form_dat_job_tag = Physical_LinCos_mA_150_mH_300
+
+form_dat_job_tag = run_Hybrid_low_mA
 form_dat_out_tag = output
 
 
 form_dat_mh    = 125.000000# Field 1
-form_dat_mH    = 300.000000# Field 2
+form_dat_mH    = 320.000000# Field 2
 #form_dat_mH    = 333.333333# Field 2
 #form_dat_mH    = 377.777778# Field 2
 #form_dat_mH    = 422.222222# Field 2
 form_dat_cosba =   0.000000# Field 3
 form_dat_tanb  =   0.000000# Field 4 
 
-form_dat_Z4    =  -3.100000# Field 5
-form_dat_Z5    =   3.100000# Field 6
+form_dat_Z4    =  -1.000000# Field 5
+form_dat_Z5    =   1.000000# Field 6
 form_dat_Z7    =   0.000000# Field 7
 
 form_dat_l6    =   0.000000e+00# Field 17
@@ -102,31 +104,31 @@ form_dat_m12_2 =   1.580000e+04# Field 19
 form_dat_XVar = 3
 form_dat_YVar = 4
 
-#form_dat_filterfield1 = 1
-#form_dat_filterfield2 = 2
-#form_dat_filterfield3 = 5
-#form_dat_filterfield4 = 6
-#form_dat_filterfield5 = 7
-
 form_dat_filterfield1 = 1
 form_dat_filterfield2 = 2
-form_dat_filterfield3 = 17
-form_dat_filterfield4 = 18
-form_dat_filterfield5 = 19
+form_dat_filterfield3 = 5
+form_dat_filterfield4 = 6
+form_dat_filterfield5 = 7
+
+#form_dat_filterfield1 = 1
+#form_dat_filterfield2 = 2
+#form_dat_filterfield3 = 17
+#form_dat_filterfield4 = 18
+#form_dat_filterfield5 = 19
 
 #######
 
-#form_dat_filterval1 = $(form_dat_mh)
-#form_dat_filterval2 = $(form_dat_mH)
-#form_dat_filterval3 = $(form_dat_Z4)
-#form_dat_filterval4 = $(form_dat_Z5)
-#form_dat_filterval5 = $(form_dat_Z7)
-
 form_dat_filterval1 = $(form_dat_mh)
 form_dat_filterval2 = $(form_dat_mH)
-form_dat_filterval3 = $(form_dat_l6)
-form_dat_filterval4 = $(form_dat_l7)
-form_dat_filterval5 = $(form_dat_m12_2)
+form_dat_filterval3 = $(form_dat_Z4)
+form_dat_filterval4 = $(form_dat_Z5)
+form_dat_filterval5 = $(form_dat_Z7)
+
+#form_dat_filterval1 = $(form_dat_mh)
+#form_dat_filterval2 = $(form_dat_mH)
+#form_dat_filterval3 = $(form_dat_l6)
+#form_dat_filterval4 = $(form_dat_l7)
+#form_dat_filterval5 = $(form_dat_m12_2)
 
 # Extract Makefile variables having 'form_dat' string; make <varname>=<varvalue>
 # pairs; pass these variable list to shell
@@ -157,7 +159,8 @@ EXPORT_FORM_DAT := $(foreach v,$(VAR_FORM_DAT),$(v)='$($(v))')
 
 #fig_job_tag = Physical_LinCos_mH_400_mA_150
 
-fig_job_tag = Physical_LinCos_mA_150_mH_300
+#fig_job_tag = Physical_LinCos_mA_150_mH_300
+fig_job_tag = run_Hybrid_low_mA
 fig_out_tag = output
 
 ###################################################################################
