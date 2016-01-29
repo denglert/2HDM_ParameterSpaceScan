@@ -218,6 +218,10 @@ int main(int argc, char* argv[]) {
    double mh,mH,mA,mHp,sinba,l6,l7,m12_2,tb;
 	model.get_param_phys(mh,mH,mA,mHp,sinba,l6,l7,m12_2,tb);
 
+
+  printf("Hvev:       %8.4f\n", sqrt(Hvev_2));
+  printf("mA:       %8.4f\n", mA);
+
   ///////////////////////////////
   // Write parameters and chi2 //
   ///////////////////////////////

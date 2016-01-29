@@ -11,15 +11,20 @@
 #run_CONFIG   = "ParamSpace.config"
 #run_WRITELHA = 0
 
-run_TASK     = "task_ParamScan_Multi.sh"
-run_TAG      = "run_Hybrid_low_mA_mH_350_detailed"
-run_CONFIG   = "ParamSpace_low_mA.config"
-run_WRITELHA = 0
+#run_TASK     = "task_ParamScan_Multi.sh"
+#run_TAG      = "run_Hybrid_low_mA_mH_350_detailed"
+#run_CONFIG   = "ParamSpace_low_mA.config"
+#run_WRITELHA = 0
 
 #run_TASK     = "task_ParamScan_Physical_Multi.sh"
 #run_TAG      = "Physical_test"
 #run_CONFIG   = "ParamSpace_Physical_default.config"
 #run_WRITELHA = 0
+
+run_TASK     = "task_ParamScan_Hybrid_mH_eq_mHc.sh"
+run_TAG      = "Hybrid_mH_eq_mHc_test"
+run_CONFIG   = "ParamSpace_Hybrid_mH_eq_mHc.config"
+run_WRITELHA = 0
 
 #run_TASK     = "task_ParamScan_Physical_LinCos.sh"
 #run_TAG      = "Physical_LinCos_test"
@@ -50,10 +55,16 @@ EXPORT_RUN = $(foreach v,$(VAR_RUN),$(v)="$(run_$(v))")
 
 #job_RESOURCELIST = "walltime=60:00:00"
 #job_RESOURCELIST = ""
+#job_RESOURCELIST = "walltime=10:00:00"
+#job_TASK     	  = "task_ParamScan_Multi.sh"
+#job_TAG      	  = "Hybrid_job_low_mA_sweep_mH"
+#job_CONFIG   	  = "ParamSpace_Hybrid_job_low_mA.config"
+#job_WRITELHA 	  = 0
+
 job_RESOURCELIST = "walltime=10:00:00"
-job_TASK     	  = "task_ParamScan_Multi.sh"
-job_TAG      	  = "Hybrid_job_low_mA_sweep_mH"
-job_CONFIG   	  = "ParamSpace_Hybrid_job_low_mA.config"
+job_TASK     	  = "task_ParamScan_Hybrid_mH_eq_mHc.sh"
+job_TAG      	  = "Hybrid_job_mH_eq_mHc_mA_from_150_to_400_8bins"
+job_CONFIG   	  = "ParamSpace_Hybrid_mH_eq_mHc.config"
 job_WRITELHA 	  = 0
 
 VAR_JOB    = $(shell echo '$(.VARIABLES)' |  awk -v RS=' ' '/^job_/' | sed 's/job_//g' )
