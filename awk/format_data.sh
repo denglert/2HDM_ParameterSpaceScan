@@ -8,6 +8,7 @@ OUTPUT_DAT=${form_dat_out_tag}_formated.dat
 OUTPUT_ALLOWED_DAT=${form_dat_out_tag}_formated_allowed.dat
 OUTPUT_MIN=${form_dat_out_tag}_chisqmin.dat
 OUTPUT_GNUPLOT=${form_dat_out_tag}_gnu.conf
+OPTION=${form_dat_opt}
 
 FIELD[1]="mh"
 FIELD[2]="mH"
@@ -21,11 +22,22 @@ FIELD[8]="chisq"
 # Create filtered text with coloumns sorted
 # output: out_filtered.tmp
 
+if [ $OPTION -eq 1 ]
+then
+# Old script:
 awk \
 	-v form_dat_filterval1="$form_dat_filterval1" -v form_dat_filterval2="$form_dat_filterval2" -v form_dat_filterval3="$form_dat_filterval3" -v form_dat_filterval4="$form_dat_filterval4" -v form_dat_filterval5="$form_dat_filterval5" \
 	-v form_dat_filterfield1="$form_dat_filterfield1" -v form_dat_filterfield2="$form_dat_filterfield2" -v form_dat_filterfield3="$form_dat_filterfield3" -v form_dat_filterfield4="$form_dat_filterfield4" -v form_dat_filterfield5="$form_dat_filterfield5" \
 	 'NR>1 && ($form_dat_filterfield1 == form_dat_filterval1) && ($form_dat_filterfield2 == form_dat_filterval2) && ($form_dat_filterfield3 == form_dat_filterval3) && ($form_dat_filterfield4 == form_dat_filterval4) && ($form_dat_filterfield5 == form_dat_filterval5)' \
 	${INPUT} | sort -gk${form_dat_XVar} -gk${form_dat_YVar} > out_filtered.tmp
+elif [ $OPTION -eq 2 ]
+then
+awk \
+	-v form_dat_filterval1="$form_dat_filterval1" -v form_dat_filterval2="$form_dat_filterval2" -v form_dat_filterval3="$form_dat_filterval3" -v form_dat_filterval4="$form_dat_filterval4" -v form_dat_filterval5="$form_dat_filterval5" \
+	-v form_dat_filterfield1="$form_dat_filterfield1" -v form_dat_filterfield2="$form_dat_filterfield2" -v form_dat_filterfield3="$form_dat_filterfield3" -v form_dat_filterfield4="$form_dat_filterfield4" -v form_dat_filterfield5="$form_dat_filterfield5" \
+	 'NR>1 && ($form_dat_filterfield1 == form_dat_filterval1) && (($form_dat_filterfield2 - form_dat_filterval2) < 3.0) && ((form_dat_filterval2 - $form_dat_filterfield2 ) < 3.0) && ($form_dat_filterfield3 == form_dat_filterval3) && ($form_dat_filterfield5 == form_dat_filterval5) && (($form_dat_filterfield4 - form_dat_filterval4) < 3.0) && ((form_dat_filterval4 - $form_dat_filterfield4 ) < 3.0)' \
+	${INPUT} | sort -gk${form_dat_XVar} -gk${form_dat_YVar} > out_filtered.tmp
+fi
 
 # Find minimum
 # output: OUTPUT_MIN
@@ -76,6 +88,10 @@ label[4]="tan({/Symbol b}) = %.2f"
 label[5]="Z4 = %.2f"
 label[6]="Z5 = %.2f"
 label[7]="Z7 = %.2f"
+label[7]="Z7 = %.2f"
+label[13]="m_{A} = %.2f GeV/c^{2}"
+label[16]="m_{H^{+/-}} = %.2f GeV/c^{2}"
+label[99]="m_{H^{+/-}} = %.2f GeV/c^{2}"
 
 axis_label[1]="m_{h} [GeV/c^{2}]"
 axis_label[2]="m_{H} [GeV/c^{2}]"

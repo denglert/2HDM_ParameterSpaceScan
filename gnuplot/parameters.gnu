@@ -34,7 +34,7 @@ tanb  = 2.0
 beta = atan(tanb)
 tan2b = tan(2*beta)
 Z7(x,y) = Z6(x,y) + 2*(y*y*(1-x*x)+mh*mh*x*x)/vev/vev/(tan2b)
-titletxt = sprintf("Z7 value, tan({/Symbol b}) = %.4f", tanb)
+titletxt = sprintf("Z7 value, mbar^{2} = 0, tan({/Symbol b}) = %.4f", tanb)
 set title titletxt font "Helvetica, 12"
 Z7_filename = sprintf("| ps2pdf - ./figures/auxiliary/Z7_cosba_mH_tanb_%.2f.pdf", tanb)
 set output Z7_filename
@@ -45,7 +45,7 @@ tanb  = 5.0
 beta = atan(tanb)
 tan2b = tan(2*beta)
 Z7(x,y) = Z6(x,y) + 2*(y*y*(1-x*x)+mh*mh*x*x)/vev/vev/(tan2b)
-titletxt = sprintf("Z7 value, tan({/Symbol b}) = %.4f", tanb)
+titletxt = sprintf("Z7 value, mbar^{2} = 0, tan({/Symbol b}) = %.4f", tanb)
 set title titletxt font "Helvetica, 12"
 Z7_filename = sprintf("| ps2pdf - ./figures/auxiliary/Z7_cosba_mH_tanb_%.2f.pdf", tanb)
 set output Z7_filename
@@ -56,7 +56,7 @@ tanb  = 10.0
 beta = atan(tanb)
 tan2b = tan(2*beta)
 Z7(x,y) = Z6(x,y) + 2*(y*y*(1-x*x)+mh*mh*x*x)/vev/vev/(tan2b)
-titletxt = sprintf("Z7 value, tan({/Symbol b}) = %.4f", tanb)
+titletxt = sprintf("Z7 value, mbar^{2} = 0, tan({/Symbol b}) = %.4f", tanb)
 set title titletxt font "Helvetica, 12"
 Z7_filename = sprintf("| ps2pdf - ./figures/auxiliary/Z7_cosba_mH_tanb_%.2f.pdf", tanb)
 set output Z7_filename
@@ -69,24 +69,31 @@ splot [-1:1] [300:600] Z7(x,y)
 # Input
 Z4 = 5.0
 
-Z5_filename = sprintf("| ps2pdf - ./figures/auxiliary/Z5_cosba_mH_Z4_%.2f.pdf", Z4)
+mH = 500
+#Z5_filename = sprintf("| ps2pdf - ./figures/auxiliary/Z5_cosba_mH_Z4_%.2f.pdf", Z4)
+Z5_filename = sprintf("| ps2pdf - ./figures/auxiliary/Z5_cosba_mA_mH_%.2f.pdf",mH)
 
 # Labels
 set xlabel "cos({/Symbol a} - {/Symbol b})"
-set ylabel "m_{H} [GeV/c^{2}]"
+set ylabel "m_{A} [GeV/c^{2}]"
 
 # Functions
-Z5(x,y) = (2*x*x*(mh*mh-y*y)/vev/vev) - Z4
+# Here y = mH, x = cos(b-a)
+#Z5(x,y) = (2*x*x*(mh*mh-y*y)/vev/vev) - Z4
+
+# Here y = mA, x = cos(b-a)
+Z5(x,y) = (2*x*x*(mh*mh-mH*mH)/vev/vev) - ((y*y/vev/vev) - (mH*mH/vev/vev) - (x*x*(mH*mH-mh*mh)/vev/vev))
 
 # Title
-titletxt = sprintf("Z5 value, Z4 = %.4f", Z4)
+#titletxt = sprintf("Z5 value, Z4 = %.4f", Z4)
+titletxt = sprintf("Z5 value, m_{H} = %.4f", mH)
 set title titletxt font "Helvetica, 12"
 
 # Ranges
 #set zrange [-10:10]
 
 set output Z5_filename
-splot [-1:1] [300:600] Z5(x,y)
+splot [-1:1] [150:400] Z5(x,y)
 
 ###############################################################
 # mA graph
