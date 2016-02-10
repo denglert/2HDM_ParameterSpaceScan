@@ -22,7 +22,7 @@
 #run_WRITELHA = 0
 
 run_TASK     = "task_ParamScan_Hybrid_mH_eq_mHc.sh"
-run_TAG      = "Hybrid_mH_eq_mHc_400_mA_150-400_8bins_Z7_0.00"
+run_TAG      = "Hybrid_mH_eq_mHc_500_mA_150-400_8bins_pert_8pi"
 run_CONFIG   = "ParamSpace_Hybrid_mH_eq_mHc.config"
 run_WRITELHA = 0
 
@@ -102,8 +102,12 @@ EXPORT_JOB = $(foreach v,$(VAR_JOB),$(v)="$(job_$(v))")
 #form_dat_job_tag = Hybrid_mH_eq_mHc_mA_from_150_to_400_8bins
 
 #form_dat_job_tag = Hybrid_mH_eq_mHc_mA_from_150_to_400_8bins_Z7_2.00
-form_dat_job_tag = Hybrid_mH_eq_mHc_mA_from_150_to_400_8bins_Z7_-2.00
+#form_dat_job_tag = Hybrid_mH_eq_mHc_mA_from_150_to_400_8bins_Z7_-2.00
+#form_dat_out_tag = output_form_dat_mA_$(form_dat_mA)
+
+form_dat_job_tag = Hybrid_mH_eq_mHc_500_mA_150-400_8bins_pert_8pi
 form_dat_out_tag = output_form_dat_mA_$(form_dat_mA)
+
 
 form_dat_opt   = 2
 #form_dat_mA    = 185.428642# Field 13
@@ -111,12 +115,12 @@ form_dat_opt   = 2
 form_dat_mh    = 125.0# Field 13
 form_dat_mH    = 500.0# Field 13
 form_dat_mHc   = ${form_dat_mH}# Field 13
-#form_dat_mA    = 150.0# Field 13
+form_dat_mA    = 150.0# Field 13
 #form_dat_mA    = 185.0# Field 13
 #form_dat_mA    = 221.0# Field 13
 #form_dat_mA    = 257.0# Field 13
 #form_dat_mA    = 292.0# Field 13
-form_dat_mA    = 328.0# Field 13
+#form_dat_mA    = 328.0# Field 13
 #form_dat_mA    = 364.0# Field 13
 #form_dat_mA    = 400.0# Field 13
 form_dat_cosba =   0.000000# Field 3
@@ -125,7 +129,7 @@ form_dat_tanb  =   0.000000# Field 4
 form_dat_Z4    =  -1.000000# Field 5
 form_dat_Z5    =   1.000000# Field 6
 
-form_dat_Z7    =  -2.000000# Field 7
+form_dat_Z7    =  0.000000# Field 7
 #form_dat_Z7    =   0.000000# Field 7
 #form_dat_Z7    =    2.000000# Field 7
 
