@@ -4,3 +4,4 @@ output/*
 qsub/task_ParamScan_Multi.sh.*
 Key.dat
 HS_analyses.txt
+src/ParameterScan_RB.f
