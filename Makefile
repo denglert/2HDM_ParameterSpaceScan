@@ -21,9 +21,13 @@
 #run_CONFIG   = "ParamSpace_Physical_default.config"
 #run_WRITELHA = 0
 
-run_TASK     = "task_ParamScan_Hybrid_mH_eq_mHc.sh"
-run_TAG      = "Hybrid_mH_eq_mHc_500_mA_150-400_8bins_pert_8pi"
-run_CONFIG   = "ParamSpace_Hybrid_mH_eq_mHc.config"
+#run_TASK     = "task_ParamScan_Hybrid_mH_eq_mHc.sh"
+#run_TAG      = "Hybrid_mH_eq_mHc_500_mA_150-400_8bins_pert_8pi"
+#run_CONFIG   = "ParamSpace_Hybrid_mH_eq_mHc.config"
+#run_WRITELHA = 0
+
+run_TASK     = "task_ParamScan_RB.sh"
+run_TAG      = "RB_test_run"
 run_WRITELHA = 0
 
 #run_TASK     = "task_ParamScan_Physical_LinCos.sh"
@@ -107,7 +111,6 @@ EXPORT_JOB = $(foreach v,$(VAR_JOB),$(v)="$(job_$(v))")
 
 form_dat_job_tag = Hybrid_mH_eq_mHc_500_mA_150-400_8bins_pert_8pi
 form_dat_out_tag = output_form_dat_mA_$(form_dat_mA)
-
 
 form_dat_opt   = 2
 #form_dat_mA    = 185.428642# Field 13
@@ -216,6 +219,9 @@ EXPORT_FORM_DAT := $(foreach v,$(VAR_FORM_DAT),$(v)='$($(v))')
 
 #fig_job_tag = run_Hybrid_low_mA_mH_350_detailed
 
+#fig_job_tag = $(form_dat_job_tag)
+#fig_out_tag = $(form_dat_out_tag)
+
 fig_job_tag = $(form_dat_job_tag)
 fig_out_tag = $(form_dat_out_tag)
 
@@ -228,7 +234,7 @@ test :
 	@echo "$(EXPORT_JOB)"
 
 run : build
-	@mkdir -p output/$(run_TAG); $(EXPORT_RUN) ./tasks/$(run_TASK); 
+	@$(EXPORT_RUN) ./tasks/$(run_TASK); 
 
 submit_job :
 	@if [ -d ./output/$(job_TAG) ]; then cp -f ./output/$(job_TAG) ./backup/$(job_TAG); rm -rf output/$(job_TAG); fi;
