@@ -1,5 +1,5 @@
-../lib/ParameterScan_Hybrid_MultiDim.cpp.o: \
- ParameterScan_Hybrid_MultiDim.cpp \
+../lib/ParameterScan_Physical_MultiDim.cpp.o: \
+ ParameterScan_Physical_MultiDim.cpp \
  /home/de3u14/lib/links/inc/2HDMC/THDM.h \
  /home/de3u14/lib/links/inc/2HDMC/SM.h \
  /local/software/gsl/1.15/include/gsl/gsl_matrix.h \

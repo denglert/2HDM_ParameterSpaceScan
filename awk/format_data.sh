@@ -104,7 +104,8 @@ axis_label[7]="Z7"
 rm -f ${OUTPUT_GNUPLOT}
 touch ${OUTPUT_GNUPLOT}
 
-echo "folderPATH = \"../../output/${form_dat_job_tag}/\"" >> $OUTPUT_GNUPLOT
+#echo "folderPATH = \"../../results/${form_dat_job_tag}/\"" >> $OUTPUT_GNUPLOT
+echo "folderPATH = \"../../\"" >> $OUTPUT_GNUPLOT
 echo "formTAG = \"${form_dat_out_tag}\"" >> $OUTPUT_GNUPLOT
 
 echo "infobox_line1 = \"${label[${form_dat_filterfield1}]}\"" >> $OUTPUT_GNUPLOT

@@ -210,7 +210,7 @@ int main(int argc, char* argv[]) {
   // Write output to LesHouches file
   if ( BitWriteLHA )
   {
-  std::string filename_LHA = Form("./output/%s/LHA/mh_%.4f_mH_%.4f_cba_%.4f_tb_%.4f_Z4_%.4f_Z5_%.4f_Z7_%.4f.lha", tag.c_str(), mh_in, mH_in, cba_in, tanb_in, Z4_in, Z5_in, Z7_in);
+  std::string filename_LHA = Form("./LHA/mh_%.4f_mH_%.4f_cba_%.4f_tb_%.4f_Z4_%.4f_Z5_%.4f_Z7_%.4f.lha", mh_in, mH_in, cba_in, tanb_in, Z4_in, Z5_in, Z7_in);
 
   model.write_LesHouches(filename_LHA.c_str(), 1, 0, 1, 1);
   }
@@ -226,7 +226,7 @@ int main(int argc, char* argv[]) {
   // Write parameters and chi2 //
   ///////////////////////////////
   
-  std::string filename_param_chisq = Form("./output/%s/chisquare_table.dat", tag.c_str());
+  std::string filename_param_chisq = Form("./chisquare_table.dat");
 
   std::ofstream file_param_chisq;
   file_param_chisq.open(filename_param_chisq.c_str(), std::ios_base::app);

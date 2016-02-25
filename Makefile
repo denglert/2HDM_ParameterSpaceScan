@@ -26,8 +26,13 @@
 #run_CONFIG   = "ParamSpace_Hybrid_mH_eq_mHc.config"
 #run_WRITELHA = 0
 
-run_TASK     = "task_ParamScan_RB.sh"
-run_TAG      = "RB_test_run"
+#run_TASK     = "task_ParamScan_RB.sh"
+#run_TAG      = "RB_test_run"
+#run_WRITELHA = 0
+
+run_TASK     = "task_ParamScan_Hybrid_mH_eq_mHc.sh"
+run_TAG      = "test"
+run_CONFIG   = "ParamSpace_Hybrid_mH_eq_mHc.config"
 run_WRITELHA = 0
 
 #run_TASK     = "task_ParamScan_Physical_LinCos.sh"
@@ -109,7 +114,13 @@ EXPORT_JOB = $(foreach v,$(VAR_JOB),$(v)="$(job_$(v))")
 #form_dat_job_tag = Hybrid_mH_eq_mHc_mA_from_150_to_400_8bins_Z7_-2.00
 #form_dat_out_tag = output_form_dat_mA_$(form_dat_mA)
 
-form_dat_job_tag = Hybrid_mH_eq_mHc_500_mA_150-400_8bins_pert_8pi
+#form_dat_job_tag = Hybrid_mH_eq_mHc_500_mA_150-400_8bins_pert_8pi
+#form_dat_out_tag = output_form_dat_mA_$(form_dat_mA)
+
+#form_dat_job_tag = Hybrid_mH_eq_mHc_500_mA_150-400_8bins_pert_8pi
+#form_dat_out_tag = output_form_dat_mA_$(form_dat_mA)
+
+form_dat_job_tag = test
 form_dat_out_tag = output_form_dat_mA_$(form_dat_mA)
 
 form_dat_opt   = 2
@@ -237,19 +248,19 @@ run : build
 	@$(EXPORT_RUN) ./tasks/$(run_TASK); 
 
 submit_job :
-	@if [ -d ./output/$(job_TAG) ]; then cp -f ./output/$(job_TAG) ./backup/$(job_TAG); rm -rf output/$(job_TAG); fi;
-	@mkdir -p output/$(job_TAG)
-	@cp ./tasks/$(job_TASK) ./output/$(job_TAG)/$(job_TASK)
-	@echo $(EXPORT_JOB) | tr " " "\n" | awk 'NF > 0' | sort | cat - ./output/$(job_TAG)/$(job_TASK) > temp; echo "#!/bin/sh" | cat - temp > temp2  && mv temp2 ./output/$(job_TAG)/$(job_TASK)
+	@if [ -d ./results/$(job_TAG) ]; then cp -f ./results/$(job_TAG) ./backup/$(job_TAG); rm -rf results/$(job_TAG); fi;
+	@mkdir -p results/$(job_TAG)
+	@cp ./tasks/$(job_TASK) ./results/$(job_TAG)/$(job_TASK)
+	@echo $(EXPORT_JOB) | tr " " "\n" | awk 'NF > 0' | sort | cat - ./results/$(job_TAG)/$(job_TASK) > temp; echo "#!/bin/sh" | cat - temp > temp2  && mv temp2 ./results/$(job_TAG)/$(job_TASK)
 	@$(EXPORT_JOB) ./qsub/submit.sh
 
-figures : 
-	@mkdir -p figures/$(fig_job_tag); cd figures/$(fig_job_tag); ../../gnuplot/plot_all.sh $(fig_job_tag) $(fig_out_tag)
-#	cd figures/$(fig_job_tag); gnuplot -e "config=../../output/${fig_job_tag}/${fig_out_tag}_gnu.conf; ../../gnuplot/chisq_distr.gnu
+fig_param : 
+	@cd ./results/$(fig_job_tag)/figures/paramspace; ../../../../gnuplot/plot_all.sh $(fig_job_tag) $(fig_out_tag)
+#	cd figures/$(fig_job_tag); gnuplot -e "config=../../results/${fig_job_tag}/${fig_out_tag}_gnu.conf; ../../gnuplot/chisq_distr.gnu
 
 
 format_data : 
-	@cd output/$(form_dat_job_tag); $(EXPORT_FORM_DAT) ../../awk/format_data.sh; echo $(EXPORT_FORM_DAT) | tr " " "\n" | awk 'NF > 0' | sort > $(form_dat_out_tag).config
+	@cd results/$(form_dat_job_tag); $(EXPORT_FORM_DAT) ../../awk/format_data.sh; echo $(EXPORT_FORM_DAT) | tr " " "\n" | awk 'NF > 0' | sort > $(form_dat_out_tag).config
 
 
 build : build_allbinaries

@@ -14,23 +14,31 @@
 
 WORKDIR=/home/de3u14/lib/projects/2HDM/2HDM_ParameterSpaceScan/
 cd $WORKDIR
-source ./config/$CONFIG
-source ~/lib/build/hep/root/bin/thisroot.sh
 module load gsl
 
 ###############################
 
-PROGBIN=./bin/ParameterScan_Hybrid_MultiDim
-file_param_chisq=output/$TAG/chisquare_table.dat
+PROGBIN=../../bin/ParameterScan_Hybrid_MultiDim
+file_param_chisq=./chisquare_table.dat
 
 # Clear up and make directories
-rm -rf output/$TAG
-mkdir output/$TAG
-mkdir output/$TAG/LHA
+if [ -d ./results/$TAG ]; then cp -f ./results/$TAG ./backup/$TAG; fi;
+rm -rf results/$TAG
+mkdir results/$TAG
+mkdir results/$TAG/LHA
+mkdir results/$TAG/figures
+mkdir results/$TAG/figures/cross-section
+mkdir results/$TAG/figures/paramspace
 
 # Make copy of the .config file
-cp ./config/$CONFIG ./output/$TAG/
+cp ./config/$CONFIG ./results/$TAG/
 
+# Change into working directory
+cd ./results/$TAG
+
+# Load variables
+source ./$CONFIG
+source ~/lib/build/hep/root/bin/thisroot.sh
 
 # Make header for the .dat file
 # mh mH cba tb, Z4, Z5, Z7, chisq, tot_hbobs, stability, unitarity,
