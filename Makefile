@@ -30,10 +30,15 @@
 #run_TAG      = "RB_test_run"
 #run_WRITELHA = 0
 
+#run_TASK     = "task_ParamScan_Hybrid_mH_eq_mHc.sh"
+#run_TAG      = "test"
+#run_CONFIG   = "ParamSpace_Hybrid_mH_eq_mHc.config"
+#run_WRITELHA = 0
+
 run_TASK     = "task_ParamScan_Hybrid_mH_eq_mHc.sh"
-run_TAG      = "test"
-run_CONFIG   = "ParamSpace_Hybrid_mH_eq_mHc.config"
-run_WRITELHA = 0
+run_TAG      = "GammaA_BR_test"
+run_CONFIG   = "ParamSpace_Hybrid_mH_eq_mHc_test.config"
+run_WRITELHA = 1
 
 #run_TASK     = "task_ParamScan_Physical_LinCos.sh"
 #run_TAG      = "Physical_LinCos_test"
@@ -236,6 +241,27 @@ EXPORT_FORM_DAT := $(foreach v,$(VAR_FORM_DAT),$(v)='$($(v))')
 fig_job_tag = $(form_dat_job_tag)
 fig_out_tag = $(form_dat_out_tag)
 
+#############################
+### -- Make benchmarks -- ###
+#############################
+
+#benchmark_tag  = "trial"
+#benchmark_list = "benchmark.pts"
+
+###########################
+### -- Make spectrum -- ###
+###########################
+
+#fig_spectra_job_tag = $(form_dat_job_tag)
+#fig_spectra_out_tag = $(form_dat_out_tag)
+
+##########################################
+### -- Cross section job submission -- ###
+##########################################
+
+xsec_job_tag   = "test"
+xsec_job_split = 5
+
 ###################################################################################
 
 test :
@@ -246,6 +272,9 @@ test :
 
 run : build
 	@$(EXPORT_RUN) ./tasks/$(run_TASK); 
+
+new : 
+	@TAG=$(TAG); ./scripts/createWD.sh
 
 submit_job :
 	@if [ -d ./results/$(job_TAG) ]; then cp -f ./results/$(job_TAG) ./backup/$(job_TAG); rm -rf results/$(job_TAG); fi;
@@ -258,6 +287,11 @@ fig_param :
 	@cd ./results/$(fig_job_tag)/figures/paramspace; ../../../../gnuplot/plot_all.sh $(fig_job_tag) $(fig_out_tag)
 #	cd figures/$(fig_job_tag); gnuplot -e "config=../../results/${fig_job_tag}/${fig_out_tag}_gnu.conf; ../../gnuplot/chisq_distr.gnu
 
+3fig_spectra : 
+
+
+#benchmark : 
+#	@cd ./results/${benchmark_tag}; input="../../benchmarks/$(benchmark_list)" ../../scripts/makeBenchmarks.sh
 
 format_data : 
 	@cd results/$(form_dat_job_tag); $(EXPORT_FORM_DAT) ../../awk/format_data.sh; echo $(EXPORT_FORM_DAT) | tr " " "\n" | awk 'NF > 0' | sort > $(form_dat_out_tag).config
@@ -268,6 +302,9 @@ build : build_allbinaries
 
 build_allbinaries : 
 	@ cd src; make binaries;
+
+prep_xsec_sub :
+	./scripts/prep_xsec_sub.sh $(xsec_job_tag) $(xsec_job_split)
 
 
 clean :

@@ -12,18 +12,20 @@ dataFILE     = dataFILEbasename."_formated.dat"
 
 fig_chisq     = formTAG."_chisq.ps"
 fig_chisqdiff = formTAG."_chisqdiff.ps"
+fig_gammaA    = "| ps2pdf - ".formTAG."_gammaA.pdf"
 fig_brazilian = formTAG."_brazilian.ps"
 fig_brazilian_mA = formTAG."_brazilian_mA.ps"
 
-chi     = 8
-chidiff = 26
+chi      = 8
+chidiff  = 26
 #chidiff = 22
-mA      = 13
-XVar    = 3
-hbobs   = 9
-stb     = 10
-uni     = 11
-per     = 12
+mA       = 13
+XVar     = 3
+hbobs    = 9
+stb      = 10
+uni      = 11
+per      = 12
+GammaA   = 15
 
 # Terminal type
 set term postscript enh color dashed font "Helvetica,10"
@@ -86,7 +88,22 @@ set title "2HDM Type-II parameter space {/Symbol D}{/Symbol c}^2 distribution" f
 set cblabel "{/Symbol D}{/Symbol c}^2={/Symbol c}^2_{tot}-{/Symbol c}^2_{min}" offset 1.2
 
 set output fig_chisqdiff
-splot dataFILE every :::XVar using XVar:YVar:chidiff tit ''
+splot dataFILE every :::1 using XVar:YVar:chidiff tit ''
+
+###############################
+### - Gamma distribution -- ###
+###############################
+
+#splot dataFILE using 1:2:($3<2.11?1:1/0) tit ''
+
+set title "2HDM Type-II {/Symbol G}_{A} distribution" font "Helvetica, 12"
+set cblabel "{/Symbol G}_{A} [GeV]" offset 1.2
+
+set cbrange [0.001:10]
+set logscale cb 10
+
+set output fig_gammaA
+splot dataFILE every ::1 using XVar:YVar:GammaA tit ''
 
 ############################
 ### - Allowed regions -- ###
@@ -112,6 +129,7 @@ sigma3 = 11.83  # 3sigma - 99.73% blue,   0
 set pm3d interpolate 4,4
 unset cblabel
 unset colorbox
+unset logscale cb
 set cbrange [0:20]
 set palette maxcolors 4
 set palette defined ( sigma1 "green",  sigma2 "yellow", sigma3 "blue", 15 "white" )
@@ -121,6 +139,7 @@ set cntrparam levels discrete sigma1,sigma2,sigma3
 boxh = 0.70
 unset object
 set object 1 rect from screen (labelx-0.01),(labely-0.02) to screen (labelx+boxw),(labely-boxh) front fillcolor rgb "white" fillstyle solid border -1
+
 
 set label "Hybrid basis:" at screen labelx,(labely) front
 set label infobox_line1, infobox_val1 at screen labelx,(labely-(1*rowspace)) front
@@ -194,3 +213,5 @@ splot dataFILE every :::1 using mA:YVar:chidiff
 #      dataFILE_chisqdiff every :::1 using 1:2:($3 <= sigma1 ? 1:1/0 ) , \
 #      dataFILE_chisqdiff every :::1 using 1:2:3
 #      dataFILE_chisqdiff every ::1 using 1:2:($3 <= sigma1 ? 1:1/0) tit '1 {/Symbol s}' with pm3d
+
+
