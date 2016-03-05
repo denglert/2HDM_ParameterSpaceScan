@@ -241,6 +241,7 @@ EXPORT_FORM_DAT := $(foreach v,$(VAR_FORM_DAT),$(v)='$($(v))')
 fig_job_tag = $(form_dat_job_tag)
 fig_out_tag = $(form_dat_out_tag)
 
+### Not developed further...
 #############################
 ### -- Make benchmarks -- ###
 #############################
@@ -287,8 +288,8 @@ fig_param :
 	@cd ./results/$(fig_job_tag)/figures/paramspace; ../../../../gnuplot/plot_all.sh $(fig_job_tag) $(fig_out_tag)
 #	cd figures/$(fig_job_tag); gnuplot -e "config=../../results/${fig_job_tag}/${fig_out_tag}_gnu.conf; ../../gnuplot/chisq_distr.gnu
 
-3fig_spectra : 
-
+# Not developed further
+#fig_spectra : 
 
 #benchmark : 
 #	@cd ./results/${benchmark_tag}; input="../../benchmarks/$(benchmark_list)" ../../scripts/makeBenchmarks.sh
