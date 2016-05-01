@@ -1,13 +1,25 @@
 #!/bin/sh
 
-input=benchmark.pts
+#input=benchmark.pts
+
+# Elena points
+#input=benchmark2.pts
+#tag=smeared_0.01
+
+# Elena points
+input=benchmark_Elena.pts
+tag=qqZH_ggZH_nobox
+
+# Tets points
+#input=benchmark_test.pts
+#tag=test
 
 ######################
 ### --- Config --- ###
 ######################
 
 sqrts="13.0d3"
-icut=1
+icut=0
 ptcut="20.d0"
 etacut="2.5d0"
 rmcut="2.5d0"
@@ -19,7 +31,8 @@ iseed=987654321
 
 #################
 
-BINARY=./ggZH_BSM
+BINARY_ggZH=./ggZH_BSM
+BINARY_qqZH=./qqZH_BSM
 
 cbafld=3
 tbfld=4
@@ -48,7 +61,8 @@ label[7]="Z7 = %.2f"
 #################
 nLines=$(wc -l < $input)
 
-rm -f benchmarklist
+benchmarklist=benchmarklist_${tag}
+rm -f ${benchmarklist}
 
 for (( i=2; i<=$nLines; i++ ))
 do
@@ -72,7 +86,7 @@ do
 	    Z5val=$(awk -v line="$i" -v  field="$Z5fld" '{if(NR==line) print $field}' $input )
 	    Z7val=$(awk -v line="$i" -v  field="$Z7fld" '{if(NR==line) print $field}' $input )
 
- 	basename="benchmark_mA_${mAval}_cba_${cbaval}_tb_${tbval}"
+ 	basename="${tag}_benchmark_mA_${mAval}_cba_${cbaval}_tb_${tbval}"
  	gnuconf="${basename}_gnu.conf"
  	rm -f $gnuconf
 
@@ -97,29 +111,54 @@ do
 	echo "infobox_val9 =  \"${Z5val}\""  >> $gnuconf
 	echo "infobox_val10 = \"${Z7val}\""  >> $gnuconf
 
-	echo -e "$basename" >> benchmarklist
+	echo -e "$basename" >> ${benchmarklist}
 
+	# -- ggZH -- #
 	# BGFLAG loop
 	for iBGFLAG in {0..3}; 
 	do
 
+		echo "ggZH process"
 		echo "cbaval: $cbaval"
 		echo "tbval: $tbval"
 		echo "mAval: $mAval"
 		echo "gammaAval: $gammaAval"
 		echo "iBGFLAG: $iBGFLAG"
- 		echo -e "$sqrts\n$icut\n$ptcut,$etacut\n$rmcut\n$ncall\n$itmax\n$acc\n$iseed\n$cbaval\n$tbval\n$mAval\n$gammaAval\n$iBGFLAG\n" | $BINARY
 
+ 		echo -e "$sqrts\n$icut\n$ptcut,$etacut\n$rmcut\n$ncall\n$itmax\n$acc\n$iseed\n$cbaval\n$tbval\n$mAval\n$gammaAval\n$iBGFLAG\n" | $BINARY_ggZH
 
 		#echo -e "$(cat ./com/${com})\n$iBGFLAG" | $BINARY
- 		output="${basename}_${iBGFLAG}.dat"
- 		mv fort.79 $output
+ 		output="${basename}_ggZH_${iBGFLAG}.dat"
+ 		mv fort.89 $output
+
+
 	done
 
-	  sigZval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_0.dat )
-	  sigAval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_1.dat )
-	 sigAZval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_2.dat )
-	sigintval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_3.dat )
+	# -- qqZH -- #
+	# BGFLAG loop
+	for iBGFLAG in {0..2}; 
+	do
+
+		echo "qqZH process"
+		echo "cbaval: $cbaval"
+		echo "tbval: $tbval"
+		echo "mAval: $mAval"
+		echo "gammaAval: $gammaAval"
+		echo "iBGFLAG: $iBGFLAG"
+
+ 		echo -e "$sqrts\n$icut\n$ptcut,$etacut\n$rmcut\n$ncall\n$itmax\n$acc\n$iseed\n$cbaval\n$tbval\n$mAval\n$gammaAval\n$iBGFLAG\n" | $BINARY_qqZH
+
+ 		output="${basename}_qqZH_${iBGFLAG}.dat"
+ 		mv fort.69 $output
+
+	done
+
+
+	# Extract sigma_{tot} from the .dat files
+	  sigZval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_ggZH_0.dat )
+	  sigAval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_ggZH_1.dat )
+	 sigAZval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_ggZH_2.dat )
+	sigintval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_ggZH_3.dat )
 
 	echo -e "sigma Z = $sigZval"
 	echo -e "sigma A = $sigAval"
@@ -131,4 +170,3 @@ do
 	echo "sigint = \"${sigintval}\""  >> $gnuconf
 
 done
-

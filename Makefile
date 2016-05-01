@@ -36,7 +36,7 @@
 #run_WRITELHA = 0
 
 run_TASK     = "task_ParamScan_Hybrid_mH_eq_mHc.sh"
-run_TAG      = "GammaA_BR_test"
+run_TAG      = "test2"
 run_CONFIG   = "ParamSpace_Hybrid_mH_eq_mHc_test.config"
 run_WRITELHA = 1
 
@@ -238,8 +238,8 @@ EXPORT_FORM_DAT := $(foreach v,$(VAR_FORM_DAT),$(v)='$($(v))')
 #fig_job_tag = $(form_dat_job_tag)
 #fig_out_tag = $(form_dat_out_tag)
 
-fig_job_tag = $(form_dat_job_tag)
-fig_out_tag = $(form_dat_out_tag)
+fig_job_tag = benchmarks_Hybrid_mH_eq_mHc_500_mA_150-400_Z7_0.00_pert_8pi
+fig_out_tag = test
 
 ### Not developed further...
 #############################
