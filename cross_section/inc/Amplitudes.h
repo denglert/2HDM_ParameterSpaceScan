@@ -2,10 +2,12 @@
 #define AMPLITUDES_H
 
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include "clooptools.h"
 #include "TLorentzVector.h"
 
+#define I std::complex<double>(0.0,1.0)
 
    //REAL*8 FUNCTION GG_ZH_BSM(propA, CPGA, P1, P2, P3, P4, NHEL)
 // Eucledian Minkowski conversion
@@ -16,6 +18,9 @@ int m2e[4] = {3, 0, 1, 2};
 const double m_W = 80.23;
 const double m_Z = 91.19;
 const double m_H = 125.0;
+
+// Gamma
+const double Gamma_Z = 2.4952;
 
 const double m_q[3][2] = { 
 		  							{ 5.0e-2,  5.00e-2}, 
@@ -55,9 +60,11 @@ const double g_hZZ    = - m_Z/cos_W; // Warning sin(alpha-beta) missing!
 extern "C"
 {
 	void errormsg_ ();
+	void looptools_ ();
 	double ggzh_triangle_( int la, int lb, double Aparam[2], double THDM_param[4], double p1[4], double p2[4], double p3[4], double p4[4] );
 	double lambda_func (double a, double b, double c);
 	std::complex<double> PropZ (double s);
 }
 
+void displayTLorentzVector(TLorentzVector *v);
 #endif
