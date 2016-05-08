@@ -6,6 +6,7 @@
 #include <cmath>
 #include "clooptools.h"
 #include "TLorentzVector.h"
+#include "TH1D.h"
 
 #define I std::complex<double>(0.0,1.0)
 
@@ -17,7 +18,7 @@ int m2e[4] = {3, 0, 1, 2};
 // Masses
 const double m_W = 80.23;
 const double m_Z = 91.19;
-const double m_H = 125.0;
+const double m_h = 125.0;
 
 // Gamma
 const double Gamma_Z = 2.4952;
@@ -31,6 +32,7 @@ const double m_q[3][2] = {
 // Quark sector
 const int niSo      = 2;
 const int nFamilies = 3;
+const int nQuarks   = 6;
 
 // Angles
 const double cos_W = m_W/m_Z;
@@ -40,8 +42,6 @@ const double cos_W2 = cos_W*cos_W;
 const double sin_W2 = sin_W*sin_W;
 
 // Couplings
-const double g_Zqq[2] = { (-0.5/(2.0*cos_W)), (+0.5/(2.0*cos_W))};
-const double g_hZZ    = - m_Z/cos_W; // Warning sin(alpha-beta) missing!
 
 //      REBL*8     TMASS,      BMASS,    CMASS,    SMASS,    UMASS
 //      PARAMETER (TMASS=173.D0,BMASS=4.75D0,CMASS=1.40D0,
@@ -57,11 +57,123 @@ const double g_hZZ    = - m_Z/cos_W; // Warning sin(alpha-beta) missing!
 
 // Masses in [GeV]
 
+class THDM
+{
+	public:
+	THDM( double p1_[4], double p2_[4], double p3_[4], double p4[4],
+			double m_A_,   double Gamma_A_, double cosBA_, double tanB_);
+	THDM( double p1_[4], double p2_[4], double p3_[4], double p4[4]);
+
+	void Calculate();
+	void Set2HDMConfig(double m_A, double Gamma_A, double cosBA, double tanB);
+	void SetAmpOption();
+	double GetAmplitudeSqr(int opt);
+
+	void DisplayConfig();
+
+	private:
+
+	double amplitude_sqr;
+	double amplitude_tri_ZA_sqr;
+	double amplitude_tri_A_sqr;
+	double amplitude_tri_Z_sqr;
+	double amplitude_box_sqr;
+
+	std::complex<double> amplitude_lalblz[2][2][3];
+
+	std::complex<double> amplitude_tri_lalblzq[2][2][3][6];
+	std::complex<double> amplitude_tri_Z_lalblzq[2][2][3][6];
+	std::complex<double> amplitude_tri_A_lalblzq[2][2][3][6];
+	std::complex<double> amplitude_tri_ZA_lalblzq[2][2][3][6];
+
+	std::complex<double> amplitude_tri_Z_lalblz[2][2][3];
+	std::complex<double> amplitude_tri_A_lalblz[2][2][3];
+	std::complex<double> amplitude_tri_ZA_lalblz[2][2][3];
+
+	std::complex<double> amplitude_box_lalblzq[2][2][3][6];
+	std::complex<double> amplitude_box_lalblz[2][2][3];
+
+	std::complex<double> Calc_F0pp(double t_, double u_, std::complex<double> C1_, std::complex<double> C2_, std::complex<double> D1_, std::complex<double> D2_, int iQ);
+	std::complex<double> Calc_F0pm(double t_, double u_, std::complex<double> C1_, std::complex<double> C2_, std::complex<double> D1_, std::complex<double> D2_, int iQ);
+	std::complex<double> Calc_F1pp(double t_, double u_, double lz, std::complex<double> C1_, std::complex<double> C2_, std::complex<double> D1_, std::complex<double> D2_, int iQ);
+	std::complex<double> Calc_F1pm(double t_, double u_, double lz, std::complex<double> C1_, std::complex<double> C2_, std::complex<double> D1_, std::complex<double> D2_, int iQ);
+
+	std::complex<double> F00s[6];
+	std::complex<double> F0pptu[6];
+	std::complex<double> F0pmtu[6];
+	std::complex<double> F1pptuP[6];
+	std::complex<double> F1pmtuP[6];
+
+	std::complex<double> F0pput[6];
+	std::complex<double> F0pmut[6];
+	std::complex<double> F1pputP[6];
+	std::complex<double> F1pmutM[6];
+
+	// Loop Integrals
+	std::complex<double> C00s[6];
+
+	std::complex<double> Cz0t[6];
+	std::complex<double> Cz0u[6];
+
+	std::complex<double> Ch0t[6];
+	std::complex<double> Ch0u[6];
+
+	std::complex<double> Chzs[6];
+
+	std::complex<double> Dh0z0tu[6];
+	std::complex<double> Dh0z0ut[6];
+
+	std::complex<double> Dhz00st[6];
+	std::complex<double> Dhz00su[6];
+
+	// -- Kinematics
+	double s;
+	double t;
+	double u;
+	double z;
+	double h;
+	double N;
+	double lambda;
+
+	// -- 2HDM parameters
+	double m_A;
+	double Gamma_A;
+	double cos_A;
+	double sin_A;
+	double cos_B;
+	double sin_B;
+	double cos_BA;
+	double sin_BA;
+	double tan_B;
+
+
+	// -- Couplings
+	double a_Zqq[6];
+	double g_hqq[6];
+	double g_Aqq[6];
+	double g_hZZ   ;
+	double g_hAZ   ;
+
+
+	// -- Auxiliary variables
+	double m_qsqr[6];
+	
+};
+
+
+std::complex<double> Propagator (double s, double m, double Gamma);
+
 extern "C"
 {
+double thdm_frontend_ ( double p1_[4], double p2_[4], double p3_[4], double p4_[4],
+					          double *THDM_param );
+void thdm_displayconfig_ ( double p1_[4], double p2_[4], double p3_[4], double p4_[4],
+					            double *THDM_param);
+	void cpp_init_ ();
+	void cpp_exit_ ();
 	void errormsg_ ();
 	void looptools_ ();
-	double ggzh_triangle_( int la, int lb, double Aparam[2], double THDM_param[4], double p1[4], double p2[4], double p3[4], double p4[4] );
+	double ggzh_triangle_( double p1_[4], double p2_[4], double p3_[4], double p4_[4], double THDM_param[6], int option );
 	double lambda_func (double a, double b, double c);
 	std::complex<double> PropZ (double s);
 }
