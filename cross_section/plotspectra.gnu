@@ -116,7 +116,7 @@ set label "w/o any kin. cuts"  tc lt 0 at screen labelsigx, labelsigy-8*labelsig
 #set label gprintf("mA_pos-3gamma: %f", mA_pos3gamma_pos)  tc lt 0 at screen labelsigx, labelsigy-11*labelsigrowspace front
 
 # Load configfile
-xlab = "m_{ZH} [GeV/c^{2}]"
+xlab = "m_{Zh} [GeV/c^{2}]"
 ylab = "d{/Symbol s}/dm_{Zh} [fb/GeV]"
 
 set xlabel xlab

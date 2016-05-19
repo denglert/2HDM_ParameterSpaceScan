@@ -7,9 +7,10 @@
 #tag=smeared_0.01
 
 # Elena points
-input=benchmark_Elena.pts
+#input=benchmark_Elena.pts
+input=benchmark_pts/benchmark_SM.pts
 #tag=qqZH_ggZH_nobox
-tag=qqZH_ggZH_withbox
+tag=SM_only_qqZH_ggZH_withbox
 
 # Tets points
 #input=benchmark_test.pts
@@ -153,7 +154,6 @@ do
  		mv fort.69 $output
 
 	done
-
 
 	# Extract sigma_{tot} from the .dat files
 	  sigZval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_ggZH_0.dat )

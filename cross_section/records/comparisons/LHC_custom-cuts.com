@@ -1,0 +1,13 @@
+13.0d3             ! ecm_coll
+0                  ! icut
+20.d0,2.5d0        ! ptcut,etacut
+100.d0             ! rmcut
+75000              ! ncall
+5                  ! itmx
+-1.d0              ! acc
+987654321          ! iseed
+0.20d0             ! cos(b-a)
+2.00d0             ! tanb
+185.0d0            ! mA
+0.047d0            ! gammaA
+2                  ! BGFLAG

@@ -210,7 +210,8 @@ THDM::THDM( double p1_[4], double p2_[4], double p3_[4], double p4_[4],
 
 	}
 
-	g_hZZ = (m_Z/cos_W)*sin_BA;    // Note that here sin(b-a) is present.
+
+	g_hZZ = m_Z*sin_BA/cos_W;    // Note that here sin(b-a) is present.
 	g_hAZ = (cos_BA)/(2.0*cos_W);  // Note that here cos(b-a) is present.
 
 	// Quark mass squared
@@ -227,6 +228,16 @@ THDM::THDM( double p1_[4], double p2_[4], double p3_[4], double p4_[4],
 ////////////////////////////////////////////////////////////////////////
 void THDM::DisplayConfig()
 {
+
+
+	printf("\n");
+	printf("--- SM parameters ---\n");
+	printf("m_Z      = %.4f\n", m_Z);
+	printf("m_W      = %.4f\n", m_W);
+	printf("sin_W2   = %.4f\n", sin_W2);
+	printf("cos_W2   = %.4f\n", cos_W2);
+	printf("sin_W    = %.4f\n", sin_W);
+	printf("cos_W    = %.4f\n", cos_W);
 		  
 	printf("\n");
 	printf("--- 2HDM parameters ---\n");
@@ -256,9 +267,10 @@ void THDM::DisplayConfig()
 	}
 
 	printf("\n");
-	std::cerr << "g_hZZ: " << g_hZZ << std::endl;
+	printf("g_hZZ  = %.5f", g_hZZ);
 	printf("\n");
-	std::cerr << "g_hAZ: " << g_hAZ << std::endl;
+	printf("g_hAZ  = %.5f", g_hAZ);
+	printf("\n");
 }
 
 
@@ -479,7 +491,6 @@ void THDM::Calculate()
 //	std::cerr << "g_hAZ: " << g_hAZ << std::endl;
 
 	# endif
-
 
 }
 
@@ -797,9 +808,19 @@ std::complex<double> THDM::Calc_F0pp(double t_, double u_,
 												 int iQ)
 {
 	std::complex<double> value;
+
+//   std::ofstream dbgfile;
+//	dbgfile.open("debug_THDM", std::ios_base::app);
+//	dbgfile << "!!!!!!!!!!!!" << std::endl;
+//	dbgfile << "Hey! I am a worm inside Calc_F0pp!" << std::endl;
+//	
+//	dbgfile << "F0ppt" << (2.0 * s * (t_ + u_) * C00s[iQ]) << std::endl;
+//	dbgfile << "F0pp1" <<  << std::endl;
+
 	value =
-			  2.0 * s * (t_ + u_) * C00s[iQ] + 2.0 * (t_ + u_ + lambda/s) * ( (t_ - zk) * C1_ + (t_ - h) * C2_ ) -
+			  2.0 * s * (t_ + u_) * C00s[iQ] + 2.0 * (t_ + u_ + lambda/s) * ( (t_ - zk) * C1_ + (t_ - h) * C2_ )
 			  - ( N * ( t_ + u_ + lambda/s) + 2.0*m_qsqr[iQ]*lambda ) * D1_ - 4.0 * (s*zk*h + m_qsqr[iQ] * lambda)*D2_; 
+
 	return value;
 }
 
@@ -917,7 +938,7 @@ double ggzh_triangle_( double p1_[4], double p2_[4], double p3_[4], double p4_[4
 			amplitude_C0[iQ] = C0(0.0,0.0,s,mqsqr[iQ],mqsqr[iQ],mqsqr[iQ]);
 			amplitude_Ftri[iQ] = 4.0 * mqsqr[iQ] * amplitude_C0[iQ];
 			//amplitude_C0[iQ] = C0(0.0,0.0,s*1.0e6,mqsqr[iQ]*1.0e6,mqsqr[iQ]*1.0e6,mqsqr[iQ]*1.0e6);
-			amplitude_quark[iQ] = -2.0*sqrt(lambda_func(s,z,h)/z) * ((z-s)/z) * g_Zqq[iSo] * g_hZZ * Propagator(s,m_Z,Gamma_Z)  * ( 4.0 * mqsqr[iQ] * amplitude_C0[iQ]  + 2.0 );
+			amplitude_quark[iQ] = -2.0*sqrt(lambda_func(s,z2,h)/z) * ((z1-s)/z1) * g_Zqq[iSo] * g_hZZ * Propagator(s,m_Z,Gamma_Z)  * ( 4.0 * mqsqr[iQ] * amplitude_C0[iQ]  + 2.0 );
 			amplitude_quark_sum = amplitude_quark_sum + amplitude_quark[iQ]; 
 
 

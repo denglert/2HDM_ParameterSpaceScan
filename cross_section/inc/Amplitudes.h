@@ -15,13 +15,20 @@
 int e2m[4] = {1, 2, 3, 0};
 int m2e[4] = {3, 0, 1, 2};
 
+// Angles
+const double sin_W2 = 0.23;
+const double cos_W2 = 1.0 - sin_W2;
+
+const double sin_W = sqrt(sin_W2);
+const double cos_W = sqrt(cos_W2);
+
 // Masses
-const double m_W = 80.23;
-const double m_Z = 91.19;
+const double m_Z = 91.3621093495386;
+const double m_W = m_Z*cos_W;
 const double m_h = 125.0;
 
 // Gamma
-const double Gamma_Z = 2.4952;
+const double Gamma_Z = 2.41916;
 
 const double m_q[3][2] = { 
 		  							{ 5.0e-2,  5.00e-2}, 
@@ -34,12 +41,7 @@ const int niSo      = 2;
 const int nFamilies = 3;
 const int nQuarks   = 6;
 
-// Angles
-const double cos_W = m_W/m_Z;
-const double sin_W = sqrt(1-(cos_W*cos_W));
 
-const double cos_W2 = cos_W*cos_W;
-const double sin_W2 = sin_W*sin_W;
 
 // Couplings
 
