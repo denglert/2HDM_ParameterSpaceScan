@@ -70,6 +70,7 @@ class THDM
 	double GetAmplitudeSqr(int opt);
 
 	void DisplayConfig();
+	void WriteDebugInfo();
 
 	private:
 
@@ -78,6 +79,12 @@ class THDM
 	double amplitude_tri_A_sqr;
 	double amplitude_tri_Z_sqr;
 	double amplitude_box_sqr;
+	double amplitude_tri_box_full_sqr;
+
+	TLorentzVector p1;
+	TLorentzVector p2;
+	TLorentzVector p3;
+	TLorentzVector p4;
 
 	std::complex<double> amplitude_lalblz[2][2][3];
 
@@ -98,16 +105,20 @@ class THDM
 	std::complex<double> Calc_F1pp(double t_, double u_, double lz, std::complex<double> C1_, std::complex<double> C2_, std::complex<double> D1_, std::complex<double> D2_, int iQ);
 	std::complex<double> Calc_F1pm(double t_, double u_, double lz, std::complex<double> C1_, std::complex<double> C2_, std::complex<double> D1_, std::complex<double> D2_, int iQ);
 
+		  	
 	std::complex<double> F00s[6];
 	std::complex<double> F0pptu[6];
 	std::complex<double> F0pmtu[6];
-	std::complex<double> F1pptuP[6];
-	std::complex<double> F1pmtuP[6];
 
 	std::complex<double> F0pput[6];
 	std::complex<double> F0pmut[6];
-	std::complex<double> F1pputP[6];
-	std::complex<double> F1pmutM[6];
+//	std::complex<double> F1pputP[6];
+//	std::complex<double> F1pmutM[6];
+
+	std::complex<double> F1pptu[6][3];
+	std::complex<double> F1pmtu[6][3];
+	std::complex<double> F1pput[6][3];
+	std::complex<double> F1pmut[6][3];
 
 	// Loop Integrals
 	std::complex<double> C00s[6];
@@ -130,7 +141,8 @@ class THDM
 	double s;
 	double t;
 	double u;
-	double z;
+	double zm;
+	double zk;
 	double h;
 	double N;
 	double lambda;

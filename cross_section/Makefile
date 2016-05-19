@@ -22,7 +22,8 @@ OBJ_CMN = $(TMP2) $(TMP_F90_2) ./lib/initialize.f.o
 TMP_F90_1 = $(shell find . -name *.f90 -not -path "./src/*" -not -path "./backup/*" | sed 's/\.f90/\.f90.o/' | xargs -n 1 basename)
 TMP_F90_2 = $(addprefix ./lib/,$(TMP_F90_1))
 
-OBJ_ggZH_BSM = ./lib/Amplitudes.cpp.o ./lib/ggZstarH_BSM.f.o ./lib/gg_ZH_BSM.f.o $(OBJ_CMN) ./lib/squarecontribution.F90.o
+#OBJ_ggZH_BSM = ./lib/Amplitudes.cpp.o ./lib/ggZstarH_BSM.f.o ./lib/gg_ZH_BSM.f.o $(OBJ_CMN) ./lib/squarecontribution.F90.o 
+OBJ_ggZH_BSM = ./lib/Amplitudes.cpp.o ./lib/ggZstarH_BSM.f.o ./lib/gg_ZH_BSM.f.o $(OBJ_CMN) ./lib/squarecontributionfuture.F90.o ./lib/squarecontribution.F90.o 
 OBJ_qqZH_BSM = ./lib/qqZstarH_BSM.f.o ./lib/qq_ZH_BSM.f.o $(OBJ_CMN)
 OBJ_test_random = ./lib/test_random.f.o $(OBJ_CMN)
 

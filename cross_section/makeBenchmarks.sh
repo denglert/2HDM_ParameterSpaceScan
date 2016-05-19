@@ -8,7 +8,8 @@
 
 # Elena points
 input=benchmark_Elena.pts
-tag=qqZH_ggZH_nobox
+#tag=qqZH_ggZH_nobox
+tag=qqZH_ggZH_withbox
 
 # Tets points
 #input=benchmark_test.pts
@@ -23,8 +24,8 @@ icut=0
 ptcut="20.d0"
 etacut="2.5d0"
 rmcut="2.5d0"
-ncall=20000000
-#ncall=750000
+#ncall=20000000
+ncall=750000
 itmax=5
 acc=-1.d0
 iseed=987654321
