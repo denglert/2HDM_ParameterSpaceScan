@@ -10,6 +10,7 @@ void cpp_init_ ()
 	
 };
 
+
 /////////////////////////////////////////////////
 void cpp_exit_ ()
 {
@@ -134,8 +135,10 @@ double thdm_frontend_ ( double p1_[4], double p2_[4], double p3_[4], double p4_[
 	double value = 0.0;
 	{
 	THDM amplitude(p1_,p2_,p3_,p4_,THDM_param[0],THDM_param[1],THDM_param[2],THDM_param[3]);
-	amplitude.Calculate();
+	amplitude.Calculate(THDM_param[4]);
 	amplitude.WriteDebugInfo();
+//	// Debuggg 
+//	std::cerr << "THDM_param[4]" << THDM_param[4] << std::endl;
 	value = amplitude.GetAmplitudeSqr(THDM_param[4]);
 	}
 	return value;
@@ -275,17 +278,96 @@ void THDM::DisplayConfig()
 
 
 ////////////////////////////////////////////////////////////////////////
-void THDM::Calculate()
+void THDM::Calculate(int opt)
 {
 
-	// -- Get 3- and 4-point functions from LoopTools
+
+	  // Debuggg 
+//		  std::cerr << "opt: " << opt << std::endl;
+
+	//////////////////////
+	// --- Triangle --- //
+	//////////////////////
+	
+	// -- Init amplitudes to 0.0
+	
+	amplitude_tri_Z_sqr            = (0.0,0.0);
+	amplitude_tri_A_sqr            = (0.0,0.0);
+	amplitude_tri_ZA_sqr           = (0.0,0.0); 
+	amplitude_tri_ZA_interference  = (0.0,0.0); 
+
+	for (int la  = 0; la < 2; la++)
+	for (int lb  = 0; lb < 2; lb++)
+	for (int lz  = 0; lz < 3; lz++)
+	{
+	
+		amplitude_tri_A_lalblz[la][lb][lz]    = (0.0,0.0);
+		amplitude_tri_Z_lalblz[la][lb][lz]    = (0.0,0.0);
+		amplitude_tri_ZA_lalblz[la][lb][lz]   = (0.0,0.0);
+
+		for (int iQ = 0; iQ < nQuarks; iQ++)
+		{
+			amplitude_tri_lalblzq[la][lb][lz][iQ] = (0.0,0.0);
+		}
+	}
+
 	for (int iF  = 0; iF < nFamilies; iF++)
 	for (int iSo = 0; iSo < niSo;      iSo++)
 	{
 
 		int iQ = iF*2+iSo;
 
-		C00s[iQ]    = C0(0.0,0.0,s,m_qsqr[iQ],m_qsqr[iQ],m_qsqr[iQ]);
+	// -- Get 3- and 4-point functions from LoopTools
+	C00s[iQ]    = C0(0.0,0.0,s,m_qsqr[iQ],m_qsqr[iQ],m_qsqr[iQ]);
+
+	// -- Calculate the form factors
+	F00s[iQ]    = 4.0 * m_qsqr[iQ] * C00s[iQ];
+
+	amplitude_tri_Z_lalblzq[0][0][1][iQ] =  2.0*sqrt(lambda/zm)*(1.0)*((zm-s)/zm)*a_Zqq[iQ]*g_hZZ*Propagator(s,m_Z,Gamma_Z)*(F00s[iQ] + 2.0); // Z
+	amplitude_tri_A_lalblzq[0][0][1][iQ] = -2.0*sqrt(lambda/zm)*(1.0)*(s/m_q[iF][iSo])*g_Aqq[iQ]*g_hAZ*Propagator(s,m_A,Gamma_A)*F00s[iQ];  // A
+
+	amplitude_tri_Z_lalblzq[1][1][1][iQ] = - amplitude_tri_Z_lalblzq[0][0][1][iQ]; // Z-component
+	amplitude_tri_A_lalblzq[1][1][1][iQ] = - amplitude_tri_A_lalblzq[0][0][1][iQ]; // A-component
+
+
+	}
+
+	// Adding up A and Z components
+	for (int la  = 0; la < 2; la++)
+	for (int lb  = 0; lb < 2; lb++)
+	for (int lz  = 0; lz < 3; lz++)
+	for (int iQ  = 0; iQ < 6; iQ++)
+	{
+		amplitude_tri_ZA_lalblzq[la][lb][lz][iQ] = amplitude_tri_Z_lalblzq[la][lb][lz][iQ] + amplitude_tri_A_lalblzq[la][lb][lz][iQ]; 
+     	 	 amplitude_tri_Z_lalblz[la][lb][lz] +=  amplitude_tri_Z_lalblzq[la][lb][lz][iQ];
+		 	 amplitude_tri_A_lalblz[la][lb][lz] +=  amplitude_tri_A_lalblzq[la][lb][lz][iQ];
+		 	amplitude_tri_ZA_lalblz[la][lb][lz] += amplitude_tri_ZA_lalblzq[la][lb][lz][iQ];
+	}
+
+
+	// -- Quark sum for each helicity configuration
+	for (int la  = 0; la < 2; la++)
+	for (int lb  = 0; lb < 2; lb++)
+	for (int lz  = 0; lz < 3; lz++)
+	{
+			  
+		amplitude_tri_Z_sqr           += std::abs(amplitude_tri_Z_lalblz[la][lb][lz]*std::conj(amplitude_tri_Z_lalblz[la][lb][lz]));
+		amplitude_tri_A_sqr           += std::abs(amplitude_tri_A_lalblz[la][lb][lz]*std::conj(amplitude_tri_A_lalblz[la][lb][lz]));
+		amplitude_tri_ZA_sqr          += std::abs(amplitude_tri_ZA_lalblz[la][lb][lz]*std::conj(amplitude_tri_ZA_lalblz[la][lb][lz]));
+		amplitude_tri_ZA_interference += std::abs( amplitude_tri_Z_lalblz[la][lb][lz]*std::conj(amplitude_tri_A_lalblz[la][lb][lz])
+							 								   +amplitude_tri_A_lalblz[la][lb][lz]*std::conj(amplitude_tri_Z_lalblz[la][lb][lz]) );
+	
+	}
+
+	if ( opt < 4) {return;}
+
+	/////////////////
+	// --- Box --- //
+	/////////////////
+	
+	// -- Get 3- and 4-point functions from LoopTools
+	for (int iQ = 0; iQ < nQuarks; iQ++)
+	{
 
 		Cz0t[iQ]    = C0(zk,0.0,t,  m_qsqr[iQ],m_qsqr[iQ],m_qsqr[iQ]);
 		Cz0u[iQ]    = C0(zk,0.0,u,  m_qsqr[iQ],m_qsqr[iQ],m_qsqr[iQ]);
@@ -304,24 +386,12 @@ void THDM::Calculate()
 		Dhz00st[iQ] = D0(h,zk,0.0,0.0,s,t,m_qsqr[iQ],m_qsqr[iQ],m_qsqr[iQ],m_qsqr[iQ]);
 		Dhz00su[iQ] = D0(h,zk,0.0,0.0,s,u,m_qsqr[iQ],m_qsqr[iQ],m_qsqr[iQ],m_qsqr[iQ]);
 
-	}
-	
-
-	// -- Calculate the form factors
-	for (int iQ = 0; iQ < nQuarks; iQ++)
-	{
-		F00s[iQ]    = 4.0 * m_qsqr[iQ] * C00s[iQ];
-
-		// F0++ = [1][1][1]
 		F0pptu[iQ]  = Calc_F0pp(t,u,     Cz0t[iQ],Ch0t[iQ],Dh0z0tu[iQ],Dhz00st[iQ],iQ); 
 		F0pput[iQ]  = Calc_F0pp(u,t,     Cz0u[iQ],Ch0u[iQ],Dh0z0ut[iQ],Dhz00su[iQ],iQ); 
 
 		// F0+- = [1][0][1]
 		F0pmtu[iQ]  = Calc_F0pm(t,u,     Cz0t[iQ],Ch0t[iQ],Dh0z0tu[iQ],Dhz00st[iQ],iQ);
 		F0pmut[iQ]  = Calc_F0pm(u,t,     Cz0u[iQ],Ch0u[iQ],Dh0z0ut[iQ],Dhz00su[iQ],iQ);
-
-//		F1pptuP[iQ] = Calc_F1pp(t,u, 1.0,Ch0t[iQ],Cz0u[iQ],Dh0z0tu[iQ],Dhz00st[iQ],iQ);
-//		F1pmtuP[iQ] = Calc_F1pm(t,u, 1.0,Ch0t[iQ],Cz0u[iQ],Dhz00st[iQ],Dh0z0tu[iQ],iQ);
 
 		// F1++ = [1][1][2]
 		F1pptu[iQ][0] = Calc_F1pp(t,u, -1.0,Ch0t[iQ],Cz0u[iQ],Dh0z0tu[iQ],Dhz00st[iQ],iQ);
@@ -339,28 +409,16 @@ void THDM::Calculate()
 
 	}
 
+	amplitude_box_sqr           = (0.0,0.0);
+	amplitude_tri_box_full_sqr  = (0.0,0.0);
 
 	// -- Init amplitudes to 0.0
 	for (int la  = 0; la < 2; la++)
 	for (int lb  = 0; lb < 2; lb++)
 	for (int lz  = 0; lz < 3; lz++)
-	for (int iF  = 0; iF < nFamilies; iF++)
-	for (int iSo = 0; iSo < niSo;      iSo++)
+	for (int iQ = 0; iQ < nQuarks; iQ++)
 	{
-		int iQ = iF*2.0+iSo;
-
-		amplitude_tri_Z_sqr         = (0.0,0.0);
-		amplitude_tri_A_sqr         = (0.0,0.0);
-		amplitude_tri_ZA_sqr        = (0.0,0.0); 
-		amplitude_box_sqr           = (0.0,0.0);
-		amplitude_tri_box_full_sqr  = (0.0,0.0);
-
-		amplitude_box_lalblz[la][lb][lz]      = (0.0,0.0);
-		amplitude_tri_A_lalblz[la][lb][lz]    = (0.0,0.0);
-		amplitude_tri_Z_lalblz[la][lb][lz]    = (0.0,0.0);
-		amplitude_tri_ZA_lalblz[la][lb][lz]   = (0.0,0.0);
 		amplitude_box_lalblzq[la][lb][lz][iQ] = (0.0,0.0);
-		amplitude_tri_lalblzq[la][lb][lz][iQ] = (0.0,0.0);
 	}
 
 	// -- Calculate the amplitudes
@@ -370,35 +428,6 @@ void THDM::Calculate()
 	{
 		int iQ = iF*2.0+iSo;
 
-
-
-		////////////////////
-		// -- Triangle -- //
-		////////////////////
-
-		// Warning: z = zk or zm ???
-
-		amplitude_tri_Z_lalblzq[0][0][1][iQ] =  2.0*sqrt(lambda/zm)*(1.0)*((zm-s)/zm)*a_Zqq[iQ]*g_hZZ*Propagator(s,m_Z,Gamma_Z)*(F00s[iQ] + 2.0); // Z
-		amplitude_tri_A_lalblzq[0][0][1][iQ] = -2.0*sqrt(lambda/zm)*(1.0)*(s/m_q[iF][iSo])*g_Aqq[iQ]*g_hAZ*Propagator(s,m_A,Gamma_A)*F00s[iQ];  // A
-
-		amplitude_tri_Z_lalblzq[1][1][1][iQ] = - amplitude_tri_Z_lalblzq[0][0][1][iQ]; // Z-component
-		amplitude_tri_A_lalblzq[1][1][1][iQ] = - amplitude_tri_A_lalblzq[0][0][1][iQ]; // A-component
-
-		 // Adding up A and Z components
-		for (int la  = 0; la < 2; la++)
-		for (int lb  = 0; lb < 2; lb++)
-		for (int lz  = 0; lz < 3; lz++)
-		for (int iQ  = 0; iQ < 6; iQ++)
-		{
-			amplitude_tri_ZA_lalblzq[la][lb][lz][iQ] = amplitude_tri_Z_lalblzq[la][lb][lz][iQ] + amplitude_tri_A_lalblzq[la][lb][lz][iQ]; 
-		}
-
-		///////////////
-		// -- Box -- //
-		///////////////
-
-		// Warning: z = zk or zm ???
-		
 		// lz lb lz = ++0
 		amplitude_box_lalblzq[1][1][1][iQ] = (8.0/sqrt(zk*lambda)) * g_hqq[iQ]*a_Zqq[iQ]*m_q[iF][iSo]*( F0pptu[iQ] + F0pput[iQ] );
 		// lz lb lz = +-0
@@ -415,7 +444,6 @@ void THDM::Calculate()
 		// la lb lz = +-+
 		amplitude_box_lalblzq[ 1 ][ 0 ][ 2 ][iQ] = - 4.0 * sqrt((2.0*N)/s) * g_hqq[iQ]*a_Zqq[iQ]*m_q[iF][iSo]*( F1pmtu[iQ][2] + F1pmut[iQ][0] );
 
-
 	}
 
 	// -- Quark sum for each helicity configuration
@@ -424,22 +452,19 @@ void THDM::Calculate()
 	for (int lz  = 0; lz < 3; lz++)
 	{
 			  
+		amplitude_box_lalblz[la][lb][lz]  = (0.0,0.0);
 		// Quark sum
-		for (int iF  = 0; iF < nFamilies; iF++)
-		for (int iSo = 0; iSo < niSo;      iSo++)
+		for (int iQ = 0; iQ < nQuarks; iQ++)
 		{
-			int iQ = iF*2.0+iSo;
-		 	 amplitude_tri_Z_lalblz[la][lb][lz] +=  amplitude_tri_Z_lalblzq[la][lb][lz][iQ];
-		 	 amplitude_tri_A_lalblz[la][lb][lz] +=  amplitude_tri_A_lalblzq[la][lb][lz][iQ];
-		 	amplitude_tri_ZA_lalblz[la][lb][lz] += amplitude_tri_ZA_lalblzq[la][lb][lz][iQ];
-			   amplitude_box_lalblz[la][lb][lz] += amplitude_box_lalblzq[la][lb][lz][iQ];
+			amplitude_box_lalblz[la][lb][lz] += amplitude_box_lalblzq[la][lb][lz][iQ];
 		}
 
 	}
 
 
 	// Making use of the symmetry arguments
-
+	
+// -- Original -- //
 	// lz lb lz = --0
 	amplitude_box_lalblz[0][0][1] = amplitude_box_lalblz[1][1][1];
 	// lz lb lz = -+0
@@ -453,6 +478,21 @@ void THDM::Calculate()
 	amplitude_box_lalblz[0][1][0] = amplitude_box_lalblz[1][0][2];
 	// lz lb lz = -++
 	amplitude_box_lalblz[0][1][2] = amplitude_box_lalblz[1][0][0];
+
+// -- Modified -- //
+//   // lz lb lz = --0
+//   amplitude_box_lalblz[0][0][1] = -amplitude_box_lalblz[1][1][1];
+//   // lz lb lz = -+0
+//   amplitude_box_lalblz[0][1][1] = -amplitude_box_lalblz[1][0][1];
+//  
+//   // lz lb lz = ---
+//   amplitude_box_lalblz[0][0][0] = amplitude_box_lalblz[1][1][2];
+//   // lz lb lz = --+
+//   amplitude_box_lalblz[0][0][2] = amplitude_box_lalblz[1][1][0];
+//   // lz lb lz = -+-
+//   amplitude_box_lalblz[0][1][0] = amplitude_box_lalblz[1][0][2];
+//   // lz lb lz = -++
+//   amplitude_box_lalblz[0][1][2] = amplitude_box_lalblz[1][0][0];
 
 
 //	std::cerr << "New code" << std::endl;
@@ -468,29 +508,11 @@ void THDM::Calculate()
 	for (int lb  = 0; lb < 2; lb++)
 	for (int lz  = 0; lz < 3; lz++)
 	{
-		amplitude_tri_Z_sqr        += std::abs(amplitude_tri_Z_lalblz[la][lb][lz]*std::conj(amplitude_tri_Z_lalblz[la][lb][lz]));
-		amplitude_tri_A_sqr        += std::abs(amplitude_tri_A_lalblz[la][lb][lz]*std::conj(amplitude_tri_A_lalblz[la][lb][lz]));
-		amplitude_tri_ZA_sqr       += std::abs(amplitude_tri_ZA_lalblz[la][lb][lz]*std::conj(amplitude_tri_ZA_lalblz[la][lb][lz]));
+
 		amplitude_box_sqr          += std::abs(amplitude_box_lalblz[la][lb][lz]   *std::conj(amplitude_box_lalblz[la][lb][lz])  );
 		amplitude_tri_box_full_sqr += std::abs( amplitude_box_lalblz[la][lb][lz]    *std::conj(amplitude_box_lalblz[la][lb][lz]) +
 						  								    amplitude_tri_ZA_lalblz[la][lb][lz] *std::conj(amplitude_tri_ZA_lalblz[la][lb][lz]) );
 	}
-
-
-	# if DEBUG
-
-//	for (int iQ = 0; iQ < nQuarks; iQ++)
-//	{
-//		std::cerr << "F00s[" << iQ << "]: " << F00s[iQ] << std::endl;
-//		std::cerr << "a_Zqq["  << iQ << "]: " << a_Zqq[iQ] << std::endl;
-//		std::cerr << "g_hqq["  << iQ << "]: " << g_hqq[iQ] << std::endl;
-//		std::cerr << "g_Aqq["  << iQ << "]: " << g_Aqq[iQ] << std::endl;
-//	}
-//
-//	std::cerr << "g_hZZ: " << g_hZZ << std::endl;
-//	std::cerr << "g_hAZ: " << g_hAZ << std::endl;
-
-	# endif
 
 }
 
@@ -499,11 +521,12 @@ double THDM::GetAmplitudeSqr(int opt)
 {
 	switch (opt) 
 	{
-		case 0: amplitude_sqr = amplitude_tri_Z_sqr;        break;
-		case 1: amplitude_sqr = amplitude_tri_A_sqr;        break;
-		case 2: amplitude_sqr = amplitude_tri_ZA_sqr;       break;
-		case 3: amplitude_sqr = amplitude_box_sqr;          break;
-		case 4: amplitude_sqr = amplitude_tri_box_full_sqr; break;
+		case 0: amplitude_sqr = amplitude_tri_Z_sqr;           break;
+		case 1: amplitude_sqr = amplitude_tri_A_sqr;           break;
+		case 2: amplitude_sqr = amplitude_tri_ZA_sqr;          break;
+		case 3: amplitude_sqr = amplitude_tri_ZA_interference; break;
+		case 4: amplitude_sqr = amplitude_box_sqr;             break;
+		case 5: amplitude_sqr = amplitude_tri_box_full_sqr;    break;
 	}
 
 	return amplitude_sqr;
@@ -1044,6 +1067,8 @@ double ggzh_triangle_( double p1_[4], double p2_[4], double p3_[4], double p4_[4
 	# endif
 
 	double result =  std::abs(amplitude_sqr);
+
+	clearcache();
 
 	return result;	
 }

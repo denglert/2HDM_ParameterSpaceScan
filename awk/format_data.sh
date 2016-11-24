@@ -1,8 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 echo -e "format_data.sh running"
 
-INPUT=chisquare_table.dat
+#INPUT=chisquare_table.dat
+#INPUT=paramspace_table.dat
+INPUT=param_pts_processed_0.dat
 OUTPUT_BASE=${form_dat_out_tag}
 OUTPUT_DAT=${form_dat_out_tag}_formated.dat
 OUTPUT_ALLOWED_DAT=${form_dat_out_tag}_formated_allowed.dat
@@ -10,40 +12,74 @@ OUTPUT_MIN=${form_dat_out_tag}_chisqmin.dat
 OUTPUT_GNUPLOT=${form_dat_out_tag}_gnu.conf
 OPTION=${form_dat_opt}
 
-FIELD[1]="mh"
-FIELD[2]="mH"
-FIELD[3]="cba"
-FIELD[4]="tb"
-FIELD[5]="Z4"
-FIELD[6]="Z5"
-FIELD[7]="Z7"
-FIELD[8]="chisq"
+
+# Format of the 'paramspace_table.dat'
+# Note: Please check whether the format has been updated recently.
+# cba_in sba tb_in Z4_in Z5_in Z7_in m12_2 l1 l2 l3 l4 l5 l6 l7 mh_in mH_in mHc mA gh gH gHc gA stb uni per S T U V W X drho damu chisq tot_hbobs" > $file_paramspace_table
+
+#
+ChiSqFieldNo=41
+
+# Field keynames
+FIELD[1]="cba"
+FIELD[3]="tb"
+FIELD[15]="mh"
+FIELD[16]="mH"
+FIELD[4]="Z4"
+FIELD[5]="Z5"
+FIELD[6]="Z7"
+FIELD[41]="chisq"
+
+# Info sidebar
+label[1]="cos({/Symbol b}-{/Symbol a}) = %.2f"
+label[1]="sin({/Symbol b}-{/Symbol a}) = %.2f"
+label[3]="tan({/Symbol b}) = %.2f"
+label[4]="Z4 = %.2f"
+label[5]="Z5 = %.2f"
+label[6]="Z7 = %.2f"
+label[7]="m_{12}^{2} = %.2f"
+label[8]="{/Symbol l}_{1} = %.2f"
+label[9]="{/Symbol l}_{2} = %.2f"
+label[15]="m_{h} = %.2f GeV/c^{2}"
+label[16]="m_{H} = %.2f GeV/c^{2}"
+label[17]="m_{H^{+/-}} = %.2f GeV/c^{2}"
+label[18]="m_{A} = %.2f GeV/c^{2}"
+
+# Axis labels
+axis_label[1]="cos({/Symbol b}-{/Symbol a})"
+axis_label[3]="tan({/Symbol b})"
+axis_label[4]="Z4"
+axis_label[5]="Z5"
+axis_label[6]="Z7"
+axis_label[15]="m_{h} [GeV/c^{2}]"
+axis_label[16]="m_{H} [GeV/c^{2}]"
+
+##########################################################
 
 # Create filtered text with coloumns sorted
-# output: out_filtered.tmp
+# Option: 1 - default
+# Option: 2 - not yet set
+# Output: out_filtered.tmp
+
+#echo "form_dat_filterfield5: ${form_dat_filterfield5}"
+#echo "form_dat_filterval5:   ${form_dat_filterval5}"
+echo "Option: ${OPTION}"
 
 if [ $OPTION -eq 1 ]
 then
-# Old script:
 awk \
+	-v tolerance=2.0\
 	-v form_dat_filterval1="$form_dat_filterval1" -v form_dat_filterval2="$form_dat_filterval2" -v form_dat_filterval3="$form_dat_filterval3" -v form_dat_filterval4="$form_dat_filterval4" -v form_dat_filterval5="$form_dat_filterval5" \
 	-v form_dat_filterfield1="$form_dat_filterfield1" -v form_dat_filterfield2="$form_dat_filterfield2" -v form_dat_filterfield3="$form_dat_filterfield3" -v form_dat_filterfield4="$form_dat_filterfield4" -v form_dat_filterfield5="$form_dat_filterfield5" \
-	 'NR>1 && ($form_dat_filterfield1 == form_dat_filterval1) && ($form_dat_filterfield2 == form_dat_filterval2) && ($form_dat_filterfield3 == form_dat_filterval3) && ($form_dat_filterfield4 == form_dat_filterval4) && ($form_dat_filterfield5 == form_dat_filterval5)' \
-	${INPUT} | sort -gk${form_dat_XVar} -gk${form_dat_YVar} > out_filtered.tmp
-elif [ $OPTION -eq 2 ]
-then
-awk \
-	-v form_dat_filterval1="$form_dat_filterval1" -v form_dat_filterval2="$form_dat_filterval2" -v form_dat_filterval3="$form_dat_filterval3" -v form_dat_filterval4="$form_dat_filterval4" -v form_dat_filterval5="$form_dat_filterval5" \
-	-v form_dat_filterfield1="$form_dat_filterfield1" -v form_dat_filterfield2="$form_dat_filterfield2" -v form_dat_filterfield3="$form_dat_filterfield3" -v form_dat_filterfield4="$form_dat_filterfield4" -v form_dat_filterfield5="$form_dat_filterfield5" \
-	 'NR>1 && ($form_dat_filterfield1 == form_dat_filterval1) && (($form_dat_filterfield2 - form_dat_filterval2) < 3.0) && ((form_dat_filterval2 - $form_dat_filterfield2 ) < 3.0) && ($form_dat_filterfield3 == form_dat_filterval3) && ($form_dat_filterfield5 == form_dat_filterval5) && (($form_dat_filterfield4 - form_dat_filterval4) < 3.0) && ((form_dat_filterval4 - $form_dat_filterfield4 ) < 3.0)' \
+	'NR>1 && ($form_dat_filterfield1 == form_dat_filterval1) && ($form_dat_filterfield2 == form_dat_filterval2) && ($form_dat_filterfield3 == form_dat_filterval3) && (($form_dat_filterfield4 - form_dat_filterval4) < tolerance) && ((form_dat_filterval4 - $form_dat_filterfield4 ) < tolerance) && (($form_dat_filterfield5 - form_dat_filterval5) < tolerance) && ((form_dat_filterval5 - $form_dat_filterfield5 ) < tolerance)' \
 	${INPUT} | sort -gk${form_dat_XVar} -gk${form_dat_YVar} > out_filtered.tmp
 fi
 
 # Find minimum
 # output: OUTPUT_MIN
 
-../../awk/findmin.awk -v field="8" out_filtered.tmp > $OUTPUT_MIN
-min=$(awk '{print $8}' $OUTPUT_MIN)
+../../awk/findmin.awk -v field="$ChiSqFieldNo" out_filtered.tmp > $OUTPUT_MIN
+min=$(awk -v field="$ChiSqFieldNo" '{val = $field} END{printf("%.4f", val)}' $OUTPUT_MIN)
 
 echo -e "Minimum chisq value: $min"
 
@@ -55,7 +91,7 @@ echo -e "Minimum chisq value: $min"
 # Append subtracted coloumn
 # output: OUTPUT_CHIDIFF
 
-../../awk/append_diff.awk -v field="8" -v val="$min" out_filtered.tmp > out_filtered_appended.tmp
+../../awk/append_diff.awk -v field="$ChiSqFieldNo" -v val="$min" out_filtered.tmp > out_filtered_appended.tmp
 
 # insert blank lines
 # output: OUTPUT_CHI
@@ -81,26 +117,6 @@ sed -i "1s/.*/$header/" $OUTPUT_ALLOWED_DAT
 
 # Make gnuplot config file
 
-label[1]="m_{h} = %.2f GeV/c^{2}"
-label[2]="m_{H} = %.2f GeV/c^{2}"
-label[3]="cos({/Symbol b}-{/Symbol a}) = %.2f"
-label[4]="tan({/Symbol b}) = %.2f"
-label[5]="Z4 = %.2f"
-label[6]="Z5 = %.2f"
-label[7]="Z7 = %.2f"
-label[7]="Z7 = %.2f"
-label[13]="m_{A} = %.2f GeV/c^{2}"
-label[16]="m_{H^{+/-}} = %.2f GeV/c^{2}"
-label[99]="m_{H^{+/-}} = %.2f GeV/c^{2}"
-
-axis_label[1]="m_{h} [GeV/c^{2}]"
-axis_label[2]="m_{H} [GeV/c^{2}]"
-axis_label[3]="cos({/Symbol b}-{/Symbol a})"
-axis_label[4]="tan({/Symbol b})"
-axis_label[5]="Z4"
-axis_label[6]="Z5"
-axis_label[7]="Z7"
-
 rm -f ${OUTPUT_GNUPLOT}
 touch ${OUTPUT_GNUPLOT}
 
@@ -123,5 +139,5 @@ echo "infobox_val5 = ${form_dat_filterval5}" >> $OUTPUT_GNUPLOT
 echo "xlab = \"${axis_label[${form_dat_XVar}]}\"" >> $OUTPUT_GNUPLOT
 echo "ylab = \"${axis_label[${form_dat_YVar}]}\"" >> $OUTPUT_GNUPLOT
 
-echo "XVar = \"${form_dat_XVar}\"" >> $OUTPUT_GNUPLOT
-echo "YVar = \"${form_dat_YVar}\"" >> $OUTPUT_GNUPLOT
+echo "XVar = ${form_dat_XVar}" >> $OUTPUT_GNUPLOT
+echo "YVar = ${form_dat_YVar}" >> $OUTPUT_GNUPLOT

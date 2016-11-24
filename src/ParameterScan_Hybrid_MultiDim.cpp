@@ -9,6 +9,8 @@
 #include <fstream>
 #include <cmath>
 
+#define VERBOSE
+
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -30,14 +32,6 @@ int main(int argc, char* argv[]) {
   double Z7_in     = (double)atof(argv[9]);
   int yt_in        = (int)atoi(argv[10]);
 
-  printf("Inside ParameterScan_Hybrid_MultiDim\n");
-  printf("mh:       %8.4f\n", mh_in);
-  printf("mH:       %8.4f\n", mH_in);
-  printf("cos(b-a): %8.4f\n", cba_in);
-  printf("tan(b):   %8.4f\n", tanb_in);
-  printf("Z4:       %8.4f\n", Z4_in);
-  printf("Z5:       %8.4f\n", Z5_in);
-  printf("Z7:       %8.4f\n", Z7_in);
 
   // Reference SM Higgs mass for EW precision observables
   double mh_ref = 125.;
@@ -70,17 +64,18 @@ int main(int argc, char* argv[]) {
   }
 
 
-  HB_init();
-  HS_init();
 
   // Set Yukawa couplings
   model.set_yukawas_type(yt_in);
 
   // Print the parameters in different parametrizations to stdout
-//  model.print_param_phys();
-//  model.print_param_gen();
-//  model.print_param_higgs();
-//  model.print_param_hybrid();
+  model.print_param_phys();
+  model.print_param_gen();
+  model.print_param_higgs();
+  model.print_param_hybrid();
+
+  HB_init();
+  HS_init();
 
   ////////////////////////////////////
   /// 									  ///
@@ -123,7 +118,8 @@ int main(int argc, char* argv[]) {
   //////////////////////////////////
   // - HiggsBounds/HiggsSignals - //
   //////////////////////////////////
-
+  
+ 
 // See HiggsSignals manual for more information
   int mass_pdf = 2;
   HS_set_pdf(mass_pdf);
@@ -216,11 +212,24 @@ int main(int argc, char* argv[]) {
   }
 
    double mh,mH,mA,mHp,sinba,l6,l7,m12_2,tb;
+   double l1,l2,l3,l4,l5;
+
+	model.get_param_gen(l1,l2,l3,l4,l5,l6,l7,m12_2,tb);
 	model.get_param_phys(mh,mH,mA,mHp,sinba,l6,l7,m12_2,tb);
 
 
   printf("Hvev:       %8.4f\n", sqrt(Hvev_2));
   printf("mA:       %8.4f\n", mA);
+
+//  printf("Inside ParameterScan_Hybrid_MultiDim\n");
+//  printf("mh:       %8.4f\n", mh_in);
+//  printf("mH:       %8.4f\n", mH_in);
+//  printf("cos(b-a): %8.4f\n", cba_in);
+//  printf("tan(b):   %8.4f\n", tanb_in);
+//  printf("Z4:       %8.4f\n", Z4_in);
+//  printf("Z5:       %8.4f\n", Z5_in);
+//  printf("Z7:       %8.4f\n", Z7_in);
+
 
   ///////////////////////////////
   // Write parameters and chi2 //
@@ -230,7 +239,7 @@ int main(int argc, char* argv[]) {
 
   std::ofstream file_param_chisq;
   file_param_chisq.open(filename_param_chisq.c_str(), std::ios_base::app);
-  std::string line = Form("%.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6e %d %d %d %.6f %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e\n", mh_in, mH_in, cba_in, tanb_in, Z4_in, Z5_in, Z7_in, csqtot, tot_hbobs, BitAllowedStability, BitAllowedUnitarity, BitAllowedPerturbaticity, mA, Gamma_h, Gamma_A, mHp, l6, l7, m12_2, S, T, U, V, W, X );
+  std::string line = Form("%.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6e %d %d %d %.6f %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e %.6e\n", mh_in, mH_in, cba_in, tanb_in, Z4_in, Z5_in, Z7_in, csqtot, tot_hbobs, BitAllowedStability, BitAllowedUnitarity, BitAllowedPerturbaticity, mA, Gamma_h, Gamma_A, mHp, l1, l2, l3, l4, l5, l6, l7, m12_2, S, T, U, V, W, X);
   file_param_chisq << line.c_str();
 
   HB_finish();

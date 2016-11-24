@@ -1,21 +1,24 @@
 #!/bin/sh
 
+#GNUPLOT=gnuplot
+GNUPLOT=/home/de3u14/lib/build/gnuplot/gnuplot-5.0.3/bin/gnuplot
+
 fig_job_tag=$1
 fig_out_tag=$2
 
-gnuplot -e "config=\"../../${fig_out_tag}_gnu.conf\"" ../../../../gnuplot/chisq_chisqdiff_brazilian.gp
+$GNUPLOT -e "config=\"../../${fig_out_tag}_gnu.conf\"" ../../../../gnuplot/chisq_chisqdiff_brazilian.gp
 
 echo "$PWD"
 
 ### Convert .ps to .pdf if .pdf.
-for x in *.ps; do
-	echo "Converting $x";
-		ps2pdf $x ${x/%ps/pdf};
-done
+#for x in *.ps; do
+#	echo "Converting $x";
+#		ps2pdf $x ${x/%ps/pdf};
+#done
 
 # Compress the pdf-s
-tar -cvf "${fig_job_tag}_pdfs.tar" *.pdf
-gzip ${fig_job_tag}_pdfs.tar
+#tar -cvf "${fig_job_tag}_pdfs.tar" *.pdf
+#gzip ${fig_job_tag}_pdfs.tar
 
 ### Convert .ps to .pdf if .pdf doesn't exist.
 #for x in *.ps; do

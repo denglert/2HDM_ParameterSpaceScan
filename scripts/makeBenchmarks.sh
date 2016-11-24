@@ -1,30 +1,7 @@
 #!/bin/sh
 
-#input=benchmark.pts
-
-WORKDIR=/home/de3u14/lib/projects/2HDM/2HDM_ParameterSpaceScan/cross_section
-cd $WORKDIR
-
-/home/de3u14/lib/build/hep/root/bin/thisroot.sh
-module load intel
-# Elena points
-#input=benchmark2.pts
-#tag=smeared_0.01
-
-# Elena points
-#input=benchmark_Elena.pts
-input=benchmark_pts/benchmark_SM.pts
-#input=benchmark_pts/benchmark_test.pts
-#tag=qqZH_ggZH_nobox
-#tag=qqZH_ggZH_nobox
-#tag=BSM_qqZH_ggZH_withoutbox
-#tag=SM_qqZH_ggZH_withbox_largestat
-#tag=SM_qqZH_ggZH_triangle_only_largestat
-tag=SM_test
-
-# Tets points
-#input=benchmark_test.pts
-#tag=test
+input=benchmark.pts
+BINARY=../../cross_section/ggZH_BSM
 
 ######################
 ### --- Config --- ###
@@ -35,18 +12,13 @@ icut=1
 ptcut="20.d0"
 etacut="2.5d0"
 rmcut="2.5d0"
-#ncall=20000000
-ncall=200000
+ncall=7500000
 #ncall=750000
 itmax=5
-#itmax=5
 acc=-1.d0
 iseed=987654321
 
 #################
-
-BINARY_ggZH=./ggZH_BSM
-BINARY_qqZH=./qqZH_BSM
 
 cbafld=3
 tbfld=4
@@ -75,8 +47,7 @@ label[7]="Z7 = %.2f"
 #################
 nLines=$(wc -l < $input)
 
-benchmarklist=benchmarklist_${tag}
-rm -f ${benchmarklist}
+rm -f benchmarklist
 
 for (( i=2; i<=$nLines; i++ ))
 do
@@ -100,7 +71,7 @@ do
 	    Z5val=$(awk -v line="$i" -v  field="$Z5fld" '{if(NR==line) print $field}' $input )
 	    Z7val=$(awk -v line="$i" -v  field="$Z7fld" '{if(NR==line) print $field}' $input )
 
- 	basename="${tag}_benchmark_mA_${mAval}_cba_${cbaval}_tb_${tbval}"
+ 	basename="benchmark_mA_${mAval}_cba_${cbaval}_tb_${tbval}"
  	gnuconf="${basename}_gnu.conf"
  	rm -f $gnuconf
 
@@ -125,58 +96,28 @@ do
 	echo "infobox_val9 =  \"${Z5val}\""  >> $gnuconf
 	echo "infobox_val10 = \"${Z7val}\""  >> $gnuconf
 
-	echo -e "$basename" >> ${benchmarklist}
+	echo -e "$basename" >> benchmarklist
 
-	# -- ggZH -- #
 	# BGFLAG loop
- 	for iBGFLAG in {0..5}; 
-# 	for iBGFLAG in {0..4}; 
+	for iBGFLAG in {0..3}; 
 	do
 
-		echo "ggZH process"
 		echo "cbaval: $cbaval"
 		echo "tbval: $tbval"
 		echo "mAval: $mAval"
 		echo "gammaAval: $gammaAval"
 		echo "iBGFLAG: $iBGFLAG"
-
- 		echo -e "$sqrts\n$icut\n$ptcut,$etacut\n$rmcut\n$ncall\n$itmax\n$acc\n$iseed\n$cbaval\n$tbval\n$mAval\n$gammaAval\n$iBGFLAG\n" | $BINARY_ggZH
+ 		echo -e "$sqrts\n$icut\n$ptcut,$etacut\n$rmcut\n$ncall\n$itmax\n$acc\n$iseed\n$cbaval\n$tbval\n$mAval\n$gammaAval\n$iBGFLAG\n" | $BINARY
 
 		#echo -e "$(cat ./com/${com})\n$iBGFLAG" | $BINARY
- 		output="${basename}_ggZH_${iBGFLAG}.dat"
- 		mv fort.89 $output
-
-
+ 		output="${basename}_${iBGFLAG}.dat"
+ 		mv fort.79 $output
 	done
 
-	# -- qqZH -- #
-	# BGFLAG loop
-	for iBGFLAG in {0..2}; 
-	do
-
-		echo "qqZH process"
-		echo "cbaval: $cbaval"
-		echo "tbval: $tbval"
-		echo "mAval: $mAval"
-		echo "gammaAval: $gammaAval"
-		echo "iBGFLAG: $iBGFLAG"
-
- 		echo -e "$sqrts\n$icut\n$ptcut,$etacut\n$rmcut\n$ncall\n$itmax\n$acc\n$iseed\n$cbaval\n$tbval\n$mAval\n$gammaAval\n$iBGFLAG\n" | $BINARY_qqZH
-
- 		output="${basename}_qqZH_${iBGFLAG}.dat"
- 		mv fort.69 $output
-
-	done
-
-	# Extract sigma_{tot} from the .dat files
-	# sigma can be found on line 368 (or somewhere else if binning is modified)
-	# You should look for a line containing '(Dist sums to:   49.181926967722497       fb)'
-	  sigZval=$(awk -v line="368" -v  field="4" '{if(NR==line) print $field}' ${basename}_ggZH_0.dat )
-	  sigAval=$(awk -v line="368" -v  field="4" '{if(NR==line) print $field}' ${basename}_ggZH_1.dat )
-	 sigAZval=$(awk -v line="368" -v  field="4" '{if(NR==line) print $field}' ${basename}_ggZH_2.dat )
-	sigintval=$(awk -v line="368" -v  field="4" '{if(NR==line) print $field}' ${basename}_ggZH_3.dat )
-	sigboxval=$(awk -v line="368" -v  field="4" '{if(NR==line) print $field}' ${basename}_ggZH_4.dat )
-	sigtriboxval=$(awk -v line="368" -v  field="4" '{if(NR==line) print $field}' ${basename}_ggZH_5.dat )
+	  sigZval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_0.dat )
+	  sigAval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_1.dat )
+	 sigAZval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_2.dat )
+	sigintval=$(awk -v line="518" -v  field="4" '{if(NR==line) print $field}' ${basename}_3.dat )
 
 	echo -e "sigma Z = $sigZval"
 	echo -e "sigma A = $sigAval"
@@ -186,7 +127,6 @@ do
 	echo "sigA   = \"${sigAval}\""  >> $gnuconf
 	echo "sigAZ  = \"${sigAZval}\""  >> $gnuconf
 	echo "sigint = \"${sigintval}\""  >> $gnuconf
-	echo "sigbox = \"${sigboxval}\""  >> $gnuconf
-	echo "sigtribox = \"${sigtriboxval}\""  >> $gnuconf
 
 done
+

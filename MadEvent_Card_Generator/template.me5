@@ -1,0 +1,36 @@
+### --- MadEvent5 card generated --- ###
+# Generated from the benchmark points file: <benchmark_file>
+# Benchmark point it: <benchmark_it>
+# Benchmark point line no: <benchmark_lineno>
+
+generate_events <run_name>
+
+# - Set options
+pythia=ON
+delphes=ON
+
+# Proceed
+0
+
+set run_tag tag_1
+set nevents <nevents>
+
+# - Modify 2HDM parameters
+set sinbma  <sinbma>  # sin(b-a)
+set tanbeta <tanbeta>  # tan(b)
+
+set l2      <l2>  # lambda_{2}
+set l3      <l3>  # lambda_{3}
+set lr7     <lr7>  # Re{lambda_{7}}
+
+set mh1     <mh>  # m_{h}
+set mh2     <mH>  # m_{H}
+set mh3     <mA>  # m_{A}
+set mhc     <mHc>  # m_{Hc}
+
+set wh1     <wh>  # Gamma_{h}
+set wh2     <wH>  # Gamma_{H}
+set wh3     <wA>  # Gamma_{A}
+set whc     <wHc>  # Gamma_{Hc}
+
+0

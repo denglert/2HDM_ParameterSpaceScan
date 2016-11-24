@@ -13,13 +13,13 @@ echo -e "Tag: $TAG"
 echo -e "Config: $CONFIG"
 echo -e "LHA: $WRITELHA"
 echo -e ""
-echo -e "qsub output:"
+echo -e "qsub results:"
 
 if [ -z ${RESOURCELIST} ]
 then
-	qsub ./output/${TAG}/${TASK}
+	qsub ./results/${TAG}/${TASK}
 else
-	qsub -l ${RESOURCELIST} ./output/${TAG}/${TASK}
+	qsub -l ${RESOURCELIST} ./results/${TAG}/${TASK}
 fi
 
 echo -e ""

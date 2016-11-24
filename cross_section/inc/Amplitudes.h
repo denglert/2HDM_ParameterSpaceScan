@@ -66,7 +66,7 @@ class THDM
 			double m_A_,   double Gamma_A_, double cosBA_, double tanB_);
 	THDM( double p1_[4], double p2_[4], double p3_[4], double p4[4]);
 
-	void Calculate();
+	void Calculate(int opt);
 	void Set2HDMConfig(double m_A, double Gamma_A, double cosBA, double tanB);
 	void SetAmpOption();
 	double GetAmplitudeSqr(int opt);
@@ -80,6 +80,7 @@ class THDM
 	double amplitude_tri_ZA_sqr;
 	double amplitude_tri_A_sqr;
 	double amplitude_tri_Z_sqr;
+	double amplitude_tri_ZA_interference;
 	double amplitude_box_sqr;
 	double amplitude_tri_box_full_sqr;
 

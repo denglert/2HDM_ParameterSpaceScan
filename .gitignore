@@ -6,3 +6,7 @@ Key.dat
 HS_analyses.txt
 src/ParameterScan_RB.f
 cross_section/*
+results/
+config/
+figures/
+backup/

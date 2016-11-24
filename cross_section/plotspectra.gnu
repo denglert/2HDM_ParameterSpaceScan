@@ -13,6 +13,9 @@ qqZHVar = 4
 row_start = 118
 row_stop = 367
 
+pTZ_start = 414
+pTZ_stop  = 813
+
 mA = infobox_val1
 mA_min = 100.
 mA_max = 600.
@@ -39,11 +42,15 @@ mA_position = row_start + mA_bin
 
 fig_out 		  = "| ps2pdf - ".basename.".pdf"
 fig_out_cut   = "| ps2pdf - ".basename."_cuttop.pdf"
+fig_out_pTZ   = "| ps2pdf - ".basename."_pTZ.pdf"
 
 data_Z        = "< paste ".basename."_ggZH_0.dat ".basename."_qqZH_2.dat "
 data_A        = "< paste ".basename."_ggZH_1.dat ".basename."_qqZH_2.dat "
 data_AZ       = "< paste ".basename."_ggZH_2.dat ".basename."_qqZH_2.dat "
 data_interfer = basename."_ggZH_3.dat"
+data_box      = "< paste ".basename."_ggZH_4.dat ".basename."_qqZH_2.dat "
+data_tri_box  = "< paste ".basename."_ggZH_5.dat ".basename."_qqZH_2.dat "
+data_tri_box_interfer  = "< paste ".basename."_ggZH_5.dat ".basename."_ggZH_2.dat ".basename."_ggZH_4.dat "
 
 # General settings
 # Terminal type
@@ -78,7 +85,7 @@ set label gprintf(infobox_line9, infobox_val9) at screen labelx,(labely-(9*rowsp
 set label gprintf(infobox_line10, infobox_val10) at screen labelx,(labely-(10*rowspace)) front
 
 labelsigx = 0.75
-labelsigy = 0.45
+labelsigy = 0.43
 labelsigrowspace = 0.035
 
 stats data_Z every ::row_start::row_stop using ggZHVar name "Z"
@@ -101,15 +108,15 @@ sigAZpeakA   = AZpeakA_sum*mA_BinWidth
 
 y_max = AZ_mean*10
 
-set label gprintf("{/Symbol s}(Z)   = %.2f fb",   sigZ)  tc rgb "blue"   at screen labelsigx, labelsigy-0*labelsigrowspace front
-set label gprintf("{/Symbol s}(A)   = %.2f fb",   sigA)  tc rgb "blue"   at screen labelsigx, labelsigy-1*labelsigrowspace front
-set label gprintf("{/Symbol s}(A+Z) = %.2f fb",  sigAZ)  tc rgb "black"   at screen labelsigx, labelsigy-2*labelsigrowspace front
-set label gprintf("{/Symbol s}(interference left)  = %.2f fb", sigint_left)   tc rgb "green" at screen labelsigx, labelsigy-3*labelsigrowspace front
-set label gprintf("{/Symbol s}(interference right) = %.2f fb", sigint_right)  tc rgb "green" at screen labelsigx, labelsigy-4*labelsigrowspace front
-set label gprintf("{/Symbol s}(interference tot) = %.2f fb", sigint)          tc rgb "green" at screen labelsigx, labelsigy-5*labelsigrowspace front
-set label gprintf("{/Symbol s}(A)[m_A+/-5 GeV] = %.2f fb", sigApeakA)         tc rgb "red" at screen labelsigx, labelsigy-6*labelsigrowspace front
-set label gprintf("{/Symbol s}(A+Z)[m_A+/-5 GeV] = %.2f fb", sigAZpeakA)      tc rgb "black" at screen labelsigx, labelsigy-7*labelsigrowspace front
-set label "w/o any kin. cuts"  tc lt 0 at screen labelsigx, labelsigy-8*labelsigrowspace front
+set label 20 gprintf("{/Symbol s}(Z)   = %.2f fb",   sigZ)  tc lt 6  at screen labelsigx, labelsigy-0*labelsigrowspace front
+set label 21 gprintf("{/Symbol s}(A)   = %.2f fb",   sigA)  tc lt 7  at screen labelsigx, labelsigy-1*labelsigrowspace front
+set label 22 gprintf("{/Symbol s}(A+Z) = %.2f fb",  sigAZ)  tc lt 1  at screen labelsigx, labelsigy-2*labelsigrowspace front
+set label 23 gprintf("{/Symbol s}(interference left)  = %.2f fb", sigint_left)   tc lt 2 at screen labelsigx, labelsigy-3*labelsigrowspace front
+set label 24 gprintf("{/Symbol s}(interference right) = %.2f fb", sigint_right)  tc lt 2 at screen labelsigx, labelsigy-4*labelsigrowspace front
+set label 25 gprintf("{/Symbol s}(interference tot) = %.2f fb", sigint)          tc lt 2 at screen labelsigx, labelsigy-5*labelsigrowspace front
+set label 26 gprintf("{/Symbol s}(A)[m_A+/-5 GeV] = %.2f fb", sigApeakA)         tc rgb "red" at screen labelsigx, labelsigy-6*labelsigrowspace front
+set label 27 gprintf("{/Symbol s}(A+Z)[m_A+/-5 GeV] = %.2f fb", sigAZpeakA)      tc rgb "black" at screen labelsigx, labelsigy-7*labelsigrowspace front
+set label 28 "w/o any kin. cuts"  tc lt 0 at screen labelsigx, labelsigy-8*labelsigrowspace front
 #set label gprintf("mA_bin: %f", mA_bin)  tc lt 0 at screen labelsigx, labelsigy-8*labelsigrowspace front
 #set label gprintf("mA_pos: %f", mA_position)  tc lt 0 at screen labelsigx, labelsigy-9*labelsigrowspace front
 #set label gprintf("mA_neg-3gamma: %f", mA_neg3gamma_pos)  tc lt 0 at screen labelsigx, labelsigy-10*labelsigrowspace front
@@ -147,16 +154,24 @@ set output fig_out
 
 set multiplot layout 2,1 rowsfirst
 
-set title "2HDM Type-II, d{/Symbol s}/dm_{Zh}, LHC at 13 TeV, (gg  qq) -> (Z + A -> Zh) process" font "Helvetica, 12"
-plot data_AZ		 every ::row_start::row_stop using XVar:(column(ggZHVar)+column(qqZHVar)) tit 'ggZh (A+Z)' with lines lt 1 lc rgb "black"   lw 3, \
-     data_Z 		 every ::row_start::row_stop using XVar:(column(qqZHVar))                 tit 'qqZh (A+Z)' with lines lt 5 dashtype 2 lc rgb "magenta" lw 3
+set title "2HDM Type-II, d{/Symbol s}/dm_{Zh}, LHC at 13 TeV, (gg  qq) -> (q triangle Z+A ) + (q box) -> Zh process" font "Helvetica, 12"
+#plot data_tri_box	 every ::row_start::row_stop using XVar:(column(ggZHVar)+column(qqZHVar)) tit 'qqZh+ggZh' with lines lt 1 lc rgb "black"   lw 3 there is comma backslash missing her
 
-set title "2HDM Type-II, d{/Symbol s}/dm_{Zh}, LHC at 13 TeV, (gg -> Z + A -> Zh) process" font "Helvetica, 12"
+plot data_AZ	 every ::row_start::row_stop using XVar:(column(ggZHVar)+column(qqZHVar)) tit 'qqZh+ggZh' with lines lt 1 lc rgb "black"   lw 3, \
+     data_Z 		 every ::row_start::row_stop using XVar:(column(qqZHVar))                 tit 'qqZh' with lines lt 5 dashtype 2 lc rgb "magenta" lw 3
 
-plot data_Z 		 every ::row_start::row_stop using XVar:(column(ggZHVar)) tit 'Z'         with lines lt 2 lc rgb "blue"    lw 1, \
-     data_A 		 every ::row_start::row_stop using XVar:(column(ggZHVar)) tit 'A'         with lines lt 2 lc rgb "red"     lw 1, \
-     data_AZ		 every ::row_start::row_stop using XVar:(column(ggZHVar)) tit 'A+Z'       with lines lt 1 lc rgb "black"   lw 3, \
-     data_interfer every ::row_start::row_stop using XVar:ggZHVar                           tit 'interfer.' with lines lt 3 lc rgb "green"   lw 1, \
+set title "2HDM Type-II, d{/Symbol s}/dm_{Zh}, LHC at 13 TeV, (gg) -> (q triangle  Z + A -> Zh) process" font "Helvetica, 12"
+
+#set logscale y
+#set yrange [0.001:0.9]
+
+plot data_Z 		          every ::row_start::row_stop using XVar:(column(ggZHVar)) tit 'Z'         with lines lt 2 lc 6 lw 1 dashtype 3, \
+     data_A 		          every ::row_start::row_stop using XVar:(column(ggZHVar)) tit 'A'         with lines lt 2 lc 7 lw 1 dashtype 3, \
+     data_AZ		          every ::row_start::row_stop using XVar:(column(ggZHVar)) tit 'A+Z'       with lines lt 3 lc 1 lw 3 dashtype 2, \
+     data_interfer          every ::row_start::row_stop using XVar:ggZHVar                           tit 'A+Z tri interfer.' with lines lt 3 lc 2   lw 1, \
+     data_box               every ::row_start::row_stop using XVar:ggZHVar                           tit 'box' with lines lt 3 lc 4   lw 1, \
+     data_tri_box           every ::row_start::row_stop using XVar:ggZHVar                           tit 'tri+box' with lines lt 3 lc 0   lw 3,\
+     data_tri_box_interfer  every ::row_start::row_stop using XVar:(column(ggZHVar)-column(4)-column(6))   tit 'tri+box inter' with lines lt 3 lc 6   lw 1
 
 unset multiplot
 
@@ -167,6 +182,29 @@ plot data_Z 		 every ::row_start::row_stop using XVar:ggZHVar tit 'Z'         wi
      data_A 		 every ::row_start::row_stop using XVar:ggZHVar tit 'A'         with lines lt 2 lc 1 lw 1, \
      data_AZ		 every ::row_start::row_stop using XVar:ggZHVar tit 'A+Z'       with lines lt 1 lc 0 lw 3, \
      data_interfer every ::row_start::row_stop using XVar:ggZHVar tit 'interfer.' with lines lt 3 lc 2 lw 1
+
+set output fig_out_pTZ
+
+set xlabel "p_{T} (Z) [GeV]"
+set ylabel "d{/Symbol s}/dp_{T}(Z) [fb/GeV]"
+
+unset label 20 
+unset label 21 
+unset label 22 
+unset label 23 
+unset label 24 
+unset label 25 
+unset label 26 
+unset label 27 
+
+plot data_Z 		          every ::pTZ_start::pTZ_stop using XVar:(column(ggZHVar)) tit 'Z'         with lines lt 2 lc 6 lw 1 dashtype 3, \
+     data_A 		          every ::pTZ_start::pTZ_stop using XVar:(column(ggZHVar)) tit 'A'         with lines lt 2 lc 7 lw 1 dashtype 3, \
+     data_AZ		          every ::pTZ_start::pTZ_stop using XVar:(column(ggZHVar)) tit 'A+Z'       with lines lt 3 lc 1 lw 3 dashtype 2, \
+     data_interfer          every ::pTZ_start::pTZ_stop using XVar:ggZHVar                           tit 'A+Z tri interfer.' with lines lt 3 lc 2   lw 1, \
+     data_box               every ::pTZ_start::pTZ_stop using XVar:ggZHVar                           tit 'box' with lines lt 3 lc 4   lw 1, \
+     data_tri_box           every ::pTZ_start::pTZ_stop using XVar:ggZHVar                           tit 'tri+box' with lines lt 3 lc 0   lw 3,\
+     data_tri_box_interfer  every ::pTZ_start::pTZ_stop using XVar:(column(ggZHVar)-column(4)-column(6))   tit 'tri+box inter' with lines lt 3 lc 6   lw 1
+
 
 #plot data_Z 		 every ::118::517 using XVar:ggZHVar tit 'Z'         with lines lt 2 lc 3 lw 1, \
 #     data_A 		 every ::118::517 using XVar:ggZHVar tit 'A'         with lines lt 2 lc 1 lw 1, \

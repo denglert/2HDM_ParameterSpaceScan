@@ -1,0 +1,22 @@
+        OPEN(24,FILE='2hdm.typ2m1_ST.68',STATUS='UNKNOWN')
+        OPEN(34,FILE='2hdm.typ2m1_ST.95',STATUS='UNKNOWN')
+c------------
+        OPEN(124,FILE='2hdm.typ2m1_gaga.68',STATUS='UNKNOWN')
+        OPEN(125,FILE='2hdm.typ2m1_gaga.95',STATUS='UNKNOWN')
+c----------
+        OPEN(224,FILE='2hdm.typ2m1_zz.68',STATUS='UNKNOWN')
+        OPEN(225,FILE='2hdm.typ2m1_zz.95',STATUS='UNKNOWN')
+c----------
+        OPEN(324,FILE='2hdm.typ2m1_ww.68',STATUS='UNKNOWN')
+        OPEN(325,FILE='2hdm.typ2m1_ww.95',STATUS='UNKNOWN')
+c----------
+        OPEN(424,FILE='2hdm.typ2m1_tau.68',STATUS='UNKNOWN')
+        OPEN(425,FILE='2hdm.typ2m1_tau.95',STATUS='UNKNOWN')
+c----------
+        OPEN(524,FILE='2hdm.typ2m1_com5.68',STATUS='UNKNOWN')
+        OPEN(525,FILE='2hdm.typ2m1_com5.95',STATUS='UNKNOWN')
+        OPEN(625,FILE='2hdm.typ2m1_com5.99',STATUS='UNKNOWN')
+c----------
+        OPEN(724,FILE='2hdm.typ2.1sigma',STATUS='UNKNOWN')
+        OPEN(825,FILE='2hdm.typ2.2sigma',STATUS='UNKNOWN')
+        OPEN(926,FILE='2hdm.typ2.3sigma',STATUS='UNKNOWN')

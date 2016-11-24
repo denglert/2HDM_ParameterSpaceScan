@@ -1,0 +1,89 @@
+#!/bin/bash
+
+format_data_option=1
+
+format_data_mh=125.0
+#format_data_mH=500.0
+#format_data_mHc=${format_data_mH}
+#SrV_format_data_mA    = 150.0
+#SrV_format_data_mA    = 160.0
+#SrV_format_data_mA    = 170.0
+#SrV_format_data_mA    = 180.0
+#SrV_format_data_mA    = 190.0
+#SrV_format_data_mA    = 200.0
+#SrV_format_data_mA    = 210.0
+#SrV_format_data_mA    = 220.0
+#SrV_format_data_mA    = 230.0
+#SrV_format_data_mA    = 240.0
+#format_data_mA=200.0
+format_data_cosba=0.000000
+format_data_tanb=0.000000
+
+format_data_Z4=-1.000000
+format_data_Z5=1.000000
+
+#format_data_Z7=0.000000
+
+format_data_l6=0.000000e+00
+format_data_l7=0.000000e+00
+format_data_m12_2=1.580000e+04
+
+format_data_XVar=1
+format_data_YVar=3
+
+###
+# Filterfields:
+# 15 = mh 
+# 16 = mH
+# 6 = Z7
+# 17 = mHc
+# 18 = mA
+
+format_data_filterfield1=15
+format_data_filterfield2=16
+format_data_filterfield3=6
+format_data_filterfield4=17
+format_data_filterfield5=18
+
+format_data_filterval1=${format_data_mh}
+format_data_filterval2=${format_data_mH}
+format_data_filterval3=${format_data_Z7}
+format_data_filterval4=${format_data_mHc}
+format_data_filterval5=${format_data_mA}
+
+
+###########################################################
+
+# Field keynames
+FIELD[1]="cba"
+FIELD[3]="tb"
+FIELD[15]="mh"
+FIELD[16]="mH"
+FIELD[4]="Z4"
+FIELD[5]="Z5"
+FIELD[6]="Z7"
+FIELD[41]="chisq"
+
+# Info sidebar
+label[1]="cos({/Symbol b}-{/Symbol a}) = %.2f"
+label[1]="sin({/Symbol b}-{/Symbol a}) = %.2f"
+label[3]="tan({/Symbol b}) = %.2f"
+label[4]="Z4 = %.2f"
+label[5]="Z5 = %.2f"
+label[6]="Z7 = %.2f"
+label[7]="m_{12}^{2} = %.2f"
+label[8]="{/Symbol l}_{1} = %.2f"
+label[9]="{/Symbol l}_{2} = %.2f"
+label[15]="m_{h} = %.2f GeV/c^{2}"
+label[16]="m_{H} = %.2f GeV/c^{2}"
+label[17]="m_{H^{+/-}} = %.2f GeV/c^{2}"
+label[18]="m_{A} = %.2f GeV/c^{2}"
+
+# Axis labels
+axis_label[1]="cos({/Symbol b}-{/Symbol a})"
+axis_label[3]="tan({/Symbol b})"
+axis_label[4]="Z4"
+axis_label[5]="Z5"
+axis_label[6]="Z7"
+axis_label[15]="m_{h} [GeV/c^{2}]"
+axis_label[16]="m_{H} [GeV/c^{2}]"
